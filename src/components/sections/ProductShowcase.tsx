@@ -175,7 +175,8 @@ const ProductShowcase = ({
               {/* UPDATED: Pricing Section now uses sans-serif and removes decimals */}
               <div className="mb-8">
                 <div className="flex items-baseline gap-4 mb-2">
-                  <span className=" font-mono text-4xl text-gold tracking-tight">
+                  <span className=" font-mono text-4xl text-gold tracking-tight
+                  ">
                     ₹{Math.floor(Number(liveProduct?.variants?.[0]?.price?.amount || 3499)).toLocaleString('en-IN')}
                   </span>
                   <span className="text-muted-foreground line-through text-sm font-sans">₹8,499</span>
