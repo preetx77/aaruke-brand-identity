@@ -10,14 +10,14 @@ const Hero = () => (
     <div className="absolute inset-0">
       <img src={phoenixHero} className="w-full h-full object-contain object-top md:object-hidden" />
       {/* <img src={phoenixHero} alt="Phoenix Background" className="hidden md:block w-full h-full object-contain object-top md:object-center " loading="eager" /> */}
-      <div className="absolute inset-0 bg-gradient-to-t from-background via-background/80 to-background/40" />
+      <div className="absolute inset-0 bg-gradient-to-t from-background via-background/80 to-background/20" />
     </div>
 
     <EmberParticles />
 
     <div className="relative z-10 max-w-3xl mx-auto text-center px-10 md:px-14 pt-24 pb-16">
       <ScrollReveal>
-        <p className="tracking-luxury uppercase text-sm font-sans mb-8 mt-8 font-light">
+        <p className="tracking-luxury uppercase text-[0.68rem] font-sans mb-5 mt-8 font-light ">
           Spirit Animal Jewellery
         </p>
       </ScrollReveal>
@@ -54,14 +54,6 @@ const Hero = () => (
             Discover the Meaning
           </a>
         </div>
-      </ScrollReveal>
-
-      <ScrollReveal delay={0.6}>
-        <p className="hero-trust" style={{ marginTop:"3rem", fontSize:"1rem", opacity:"50%" ,letterSpacing:"0.03em",  color:"var(--gold-dim)" }}>
-        <span style={{ margin:"0 0.8rem" }}>Limited Founder Release</span>·
-        <span style={{ margin:"0 0.8rem" }}>Spirit Animal Jewellery</span>·
-        <span style={{ margin:"0 0.8rem" }}>India</span>
-      </p>
       </ScrollReveal>
     </div>
   </section>

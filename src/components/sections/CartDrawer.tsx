@@ -78,7 +78,7 @@ export const CartDrawer = ({
                   </div>
                   
                   <div className="flex items-center justify-between mt-3">
-                    <p className="text-gold font-serif">₹{item.price}</p>
+                    <p className="text-gold font-sans font-medium tracking-tight">₹{Math.floor(Number(item.price || 0)).toLocaleString('en-IN')}</p>
                     
                     <div className="flex items-center gap-3 bg-black/30 border border-white/10 rounded-md px-2 py-1">
                       <button 
@@ -106,7 +106,7 @@ export const CartDrawer = ({
         <div className="p-6 border-t border-white/10 bg-black/20">
           <div className="flex justify-between text-ivory mb-6 font-serif text-lg">
             <span>Subtotal</span>
-            <span>{subtotal}</span> 
+            <span className="font-mono tracking-tight">{subtotal}</span> 
           </div>
           
           <button 

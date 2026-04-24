@@ -6,7 +6,6 @@ import { CartDrawer, CartItemType } from "./CartDrawer";
 import phoenixGold from "@/assets/phoenix-gold.jpg";
 import phoenixSilver from "@/assets/phoenix-silver.jpg";
 
-// 1. Accept the new remote control props from Index.tsx
 const ProductShowcase = ({ 
   onOpenAuth, 
   isCartOpen, 
@@ -23,7 +22,6 @@ const ProductShowcase = ({
   });
 
   const [isProcessing, setIsProcessing] = useState(false);
-  // (Notice we deleted the local isCartOpen state from here!)
   const [liveProduct, setLiveProduct] = useState<any>(null);
   const [isLoadingData, setIsLoadingData] = useState(true);
 
@@ -49,7 +47,7 @@ const ProductShowcase = ({
     const token = localStorage.getItem("aaruke_token");
 
     if (!token) {
-      onOpenAuth(); // Uses the prop to open the main Auth modal
+      onOpenAuth();
       return; 
     }
 
@@ -63,11 +61,14 @@ const ProductShowcase = ({
         (variant: any) => variant.title.toLowerCase().includes(selected)
       ) || liveProduct.variants[0];
 
+      // Grab the exact dynamic price from Shopify
+      const rawPrice = selectedVariant.price?.amount || selectedVariant.priceV2?.amount || selectedVariant.price || "3499";
+
       const newItem: CartItemType = {
         id: selectedVariant.id,
         title: liveProduct.title,
         variantTitle: selectedVariant.title,
-        price: selectedVariant.price?.amount || selectedVariant.priceV2?.amount || selectedVariant.price || "3499",
+        price: rawPrice,
         image: selected === "gold" ? phoenixGold : phoenixSilver,
         quantity: 1
       };
@@ -80,7 +81,6 @@ const ProductShowcase = ({
         return [...prev, newItem];
       });
       
-      // Opens the cart using the prop from Index.tsx
       setIsCartOpen(true);
       
     } catch (error) {
@@ -160,22 +160,25 @@ const ProductShowcase = ({
               
               <h2 className="font-serif text-5xl md:text-6xl font-light mb-4 italic">Phoenix Necklace</h2>
               
-              <p className="font-serif text-gold/70 italic text-lg mb-10">Symbolic Phoenix Pendant · Transformation Jewellery</p>
+              <p className="font-serif text-gold/70 italic text-lg mb-5">Rise · Transform · Become</p>
+
+              <p className="font-serif text-base md:text-lg font-light mb-4 italic">Crafted for everyday elegance and statement moments, the Phoenix pendant blends minimal luxury with deep meaning—designed to be worn close, always.</p>
 
               <ul className="space-y-4 mb-12 font-sans text-sm text-ivory/60 font-light border-y border-white/5 py-8">
-                <li className="flex items-center gap-4">— <span className="tracking-wide">Symbolic phoenix pendant necklace</span></li>
-                <li className="flex items-center gap-4">— <span className="tracking-wide">Premium gold & silver finish</span></li>
-                <li className="flex items-center gap-4">— <span className="tracking-wide">Skin-friendly, hypoallergenic</span></li>
-                <li className="flex items-center gap-4">— <span className="tracking-wide">Lightweight — worn daily or as statement</span></li>
-                <li className="flex items-center gap-4">— <span className="tracking-wide">Minimalist luxury design</span></li>
-                <li className="flex items-center gap-4">— <span className="tracking-wide">Meaningful jewelry gift</span></li>
-                <li className="flex items-center gap-4">— <span className="tracking-wide">Handcrafted in limited batches</span></li>
+                <li className="flex items-center gap-4">— <span className="tracking-wide">Material: Premium brass base with 22kt gold plating / high-polish silver finish</span></li>
+                <li className="flex items-center gap-4">— <span className="tracking-wide">Plating Durability: Up to 18 months with proper care</span></li>
+                <li className="flex items-center gap-4">— <span className="tracking-wide">Finish: Anti-tarnish coated for longer-lasting shine</span></li>
+                <li className="flex items-center gap-4">— <span className="tracking-wide">Skin Safety: Hypoallergenic & skin-friendly</span></li>
+                <li className="flex items-center gap-4">— <span className="tracking-wide">Weight: 3 grams</span></li>
               </ul>
 
+              {/* UPDATED: Pricing Section now uses sans-serif and removes decimals */}
               <div className="mb-8">
                 <div className="flex items-baseline gap-4 mb-2">
-                  <span className="font-serif text-4xl text-gold italic">₹{liveProduct?.variants?.[0]?.price?.amount || "3,499"}</span>
-                  <span className="text-muted-foreground line-through text-sm">₹8,499</span>
+                  <span className=" font-mono text-4xl text-gold tracking-tight">
+                    ₹{Math.floor(Number(liveProduct?.variants?.[0]?.price?.amount || 3499)).toLocaleString('en-IN')}
+                  </span>
+                  <span className="text-muted-foreground line-through text-sm font-sans">₹8,499</span>
                 </div>
                 <p className="text-[10px] tracking-widest text-orange-500 uppercase font-medium">
                   🔥 Founder Pricing · First 50 Pieces Only
@@ -206,7 +209,6 @@ const ProductShowcase = ({
         onClose={() => setIsCartOpen(false)} 
         cartItems={cartItems}
         subtotal={`₹${cartItems.reduce((sum, item) => sum + (Number(item.price) * item.quantity), 0).toLocaleString('en-IN')}`}
-        // 2. The Guard Rail: Ignore clicks if the quantity goes below 1
         onUpdateQuantity={(id, q) => {
           if (q < 1) return;
           setCartItems(prev => prev.map(i => i.id === id ? {...i, quantity: q} : i));

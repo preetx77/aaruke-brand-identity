@@ -53,10 +53,10 @@ const Footer = () => {
 
           <div className="font-serif text-2xl text-ivory mb-3 text-center md:text-left" >
             Socials
-            <div className="flex gap-4 justify-center md:justify-start mt-4">
-                <ul>
-                <li><a href="#" className="font-sans text-xs text-muted-foreground/50 hover:text-gold transition-colors">Instagram &nbsp;&nbsp;<FontAwesomeIcon icon={faInstagram} /></a></li>
-                <li><a href="#" className="font-sans text-xs text-muted-foreground/50 hover:text-gold transition-colors">Pinterest &nbsp;&nbsp;<FontAwesomeIcon icon={faPinterest} /></a></li>
+            <div className="flex flex-row justify-center md:justify-start mt-4 gap-6">
+                <ul className="flex flex-row gap-6">
+                <li><a href="#" className="font-sans text-4xl text-muted-foreground/50 hover:text-gold transition-colors"><FontAwesomeIcon icon={faInstagram} /></a></li>
+                <li><a href="#" className="font-sans text-4xl text-muted-foreground/50 hover:text-gold transition-colors"> <FontAwesomeIcon icon={faPinterest} /></a></li>
                 </ul>
             
           </div>
