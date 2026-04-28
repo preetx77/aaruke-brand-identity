@@ -1,7 +1,13 @@
 import { useState, useEffect } from "react";
-import { ShoppingCart , Menu, X } from "lucide-react";
+import { ShoppingCart, Menu, X, User } from "lucide-react";
 
-const Nav = ({ onOpenCart, onOpenAuth }) => {
+interface NavProps {
+  onOpenCart: () => void;
+  onOpenAuth: () => void;
+  onOpenContact: () => void;
+}
+
+const Nav = ({ onOpenCart, onOpenAuth, onOpenContact }: NavProps) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -23,36 +29,37 @@ const Nav = ({ onOpenCart, onOpenAuth }) => {
 
   return (
     <>
-      <nav className="fixed top-0 left-0 right-0 z-50 py-1 md:py-4 backdrop-blur-md border-b border-white/10">
-        <div className="w-full flex items-center justify-between px-4 md:px-3 md:py-0 max-w-7xl mx-auto">
+      <nav className="fixed top-0 left-0 right-0 z-50 py-3 md:py-5 backdrop-blur-md border-b border-white/10">
+        {/* Added 'relative' here so the absolutely positioned logo stays contained */}
+        <div className="w-full relative flex items-center justify-between px-4 md:px-6 max-w-7xl mx-auto">
           
-          {/* LEFT SIDE: Hamburger OR Logo */}
-          <div className="flex items-center gap-4">
-            
-            {/* Hamburger Button (VISIBLE ON MOBILE ONLY) */}
+          {/* LEFT SIDE: Hamburger Menu (Now visible on ALL screens) */}
+          <div className="flex items-center">
             <button 
               onClick={() => setIsMobileMenuOpen(true)}
-              className="md:hidden text-white/70 hover:text-[#c5a059] transition-colors pt-2 pb-1 py-0 -ml-1"
+              className="text-white/70 hover:text-[#c5a059] transition-colors"
               aria-label="Open Menu"
             >
-              <Menu strokeWidth={1.5} className="w-5 h-5" />
+              <Menu strokeWidth={1.5} className="w-6 h-6" />
             </button>
+          </div>
 
-            {/* Brand Logo (VISIBLE ON DESKTOP ONLY) */}
+          {/* CENTER: Brand Logo (Absolutely centered on ALL screens) */}
+          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
             <a 
-              href="#" 
-              className="hidden md:block font-serif italic font-light text-[1rem] text-ivory uppercase no-underline tracking-wide" 
-              style={{ fontFamily:"italic", fontWeight:200, color:"var(--ivory)", textDecoration:"none", textTransform:"uppercase" }}
+              href="/" 
+              className="font-serif italic font-light text-[1.15rem] md:text-[1.25rem] text-ivory uppercase no-underline tracking-tight" 
+              style={{ fontWeight: 200, color: "var(--ivory)", textDecoration: "none", textTransform: "uppercase" }}
             >
-              Aar<span style={{ color: "#c5a059" }}>u</span>kè 
+              Aar<span style={{ color: "#c5a059" }}>u</span>ké
             </a>
           </div>
 
           {/* RIGHT SIDE: Links, Auth, and Cart */}
-          <div className="flex items-center gap-4 md:gap-6">
+          <div className="flex items-center gap-5 md:gap-6">
             
             {/* Desktop-only Shop Link */}
-            <a href="#product" className="hidden md:block font-sans text-xs tracking-widest uppercase text-[#c5a059] hover:text-white transition-colors">
+            <a href="#product" className="hidden md:block font-sans text-[10px] md:text-xs tracking-widest uppercase text-[#c5a059] hover:text-white transition-colors">
               Shop Phoenix
             </a>
 
@@ -60,16 +67,20 @@ const Nav = ({ onOpenCart, onOpenAuth }) => {
             {isLoggedIn ? (
               <button 
                 onClick={handleLogout}
-                className="font-sans text-[10px] md:text-xs tracking-widest uppercase text-white/70 hover:text-[#c5a059] transition-colors"
+                className="text-white/70 hover:text-[#c5a059] transition-colors flex items-center justify-center"
+                aria-label="Sign Out"
               >
-                Sign Out
+                <span className="hidden md:block font-sans text-[10px] md:text-xs tracking-widest uppercase">Sign Out</span>
+                <User className="w-5 h-5 md:hidden" strokeWidth={1.5} />
               </button>
             ) : (
               <button 
                 onClick={onOpenAuth}
-                className="font-sans text-[10px] md:text-xs tracking-widest uppercase text-white/70 hover:text-[#c5a059] transition-colors"
+                className="text-white/70 hover:text-[#c5a059] transition-colors flex items-center justify-center"
+                aria-label="Sign In"
               >
-                Sign In
+                <span className="hidden md:block font-sans text-[10px] md:text-xs tracking-widest uppercase">Sign In</span>
+                <User className="w-5 h-5 md:hidden" strokeWidth={1.5} />
               </button>
             )}
 
@@ -82,16 +93,16 @@ const Nav = ({ onOpenCart, onOpenAuth }) => {
               className="flex items-center justify-center text-white/70 hover:text-[#c5a059] transition-all hover:scale-110 active:scale-95"
               aria-label="Open Cart"
             >
-              <ShoppingCart className="w-4 h-4 md:w-5 md:h-5" strokeWidth={1.5} />
+              <ShoppingCart className="w-5 h-5" strokeWidth={1.5} />
             </button>
             
           </div>
         </div>
       </nav>
 
-      {/* --- MOBILE SIDE MENU DRAWER --- */}
+      {/* --- MOBILE/SIDE MENU DRAWER --- */}
       <div 
-        className={`fixed inset-0 z-[120] transition-opacity duration-300 md:hidden ${
+        className={`fixed inset-0 z-[120] transition-opacity duration-300 ${
           isMobileMenuOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
         }`}
       >
@@ -101,7 +112,7 @@ const Nav = ({ onOpenCart, onOpenAuth }) => {
         ></div>
 
         <div 
-          className={`absolute top-0 left-0 w-64 h-full bg-[#0a0c0c] border-r border-white/10 p-8 transform transition-transform duration-500 ease-out flex flex-col ${
+          className={`absolute top-0 left-0 w-72 md:w-80 h-full bg-[#0a0c0c] border-r border-white/10 p-8 transform transition-transform duration-500 ease-[cubic-bezier(0.25,1,0.5,1)] flex flex-col ${
             isMobileMenuOpen ? "translate-x-0" : "-translate-x-full"
           }`}
         >
@@ -109,13 +120,12 @@ const Nav = ({ onOpenCart, onOpenAuth }) => {
             onClick={() => setIsMobileMenuOpen(false)} 
             className="absolute top-6 right-6 text-white/40 hover:text-[#c5a059] transition-colors"
           >
-            <X strokeWidth={1.5} className="w-5 h-5" />
+            <X strokeWidth={1.5} className="w-6 h-6" />
           </button>
 
-          {/* Logo is safely visible here inside the mobile menu! */}
-          <div className="mb-12 mt-2">
-            <span className="font-serif italic font-light text-[1.75rem] text-ivory uppercase no-underline tracking-wide"  style={{ fontFamily:"italic", fontSize:"1rem", fontWeight:200, color:"var(--ivory)", textDecoration:"none", textTransform:"uppercase" }}>
-              Aar<span className="text-[#c5a059]">u</span>kè 
+          <div className="mb-16 mt-4">
+            <span className="font-serif italic font-light text-[1.75rem] text-ivory uppercase no-underline tracking-tight" style={{ fontWeight: 200, color: "var(--ivory)", textDecoration: "none", textTransform: "uppercase" }}>
+              Aar<span className="text-[#c5a059]">u</span>ké
             </span>
           </div>
 
@@ -123,29 +133,35 @@ const Nav = ({ onOpenCart, onOpenAuth }) => {
             <a 
               href="#product" 
               onClick={() => setIsMobileMenuOpen(false)}
-              className="text-[11px] tracking-[0.2em] uppercase text-[#c5a059] hover:text-white transition-colors"
+              className="text-xs md:text-sm tracking-[0.2em] uppercase text-[#c5a059] hover:text-white transition-colors"
             >
               Shop Phoenix
             </a>
             <a 
               href="#meaning" 
               onClick={() => setIsMobileMenuOpen(false)}
-              className="text-[11px] tracking-[0.2em] uppercase text-white/70 hover:text-[#c5a059] transition-colors"
+              className="text-xs md:text-sm tracking-[0.2em] uppercase text-white/70 hover:text-[#c5a059] transition-colors"
             >
               Read The Meaning
             </a>
+            
           </div>
 
-          <div className="mt-auto pt-8 border-t border-white/10">
-             <a href="mailto:support@aaruke.com" className="text-[9px] tracking-widest text-white/40 hover:text-white uppercase transition-colors">
+          <div className="mt-auto pt-8 border-t border-white/10 flex flex-col items-start">
+             <button 
+               onClick={() => {
+                 setIsMobileMenuOpen(false);
+                 onOpenContact();
+               }}
+               className="text-[10px] tracking-widest text-white/40 hover:text-white uppercase transition-colors"
+             >
                Contact Support
-             </a>
+             </button>
           </div>
         </div>
       </div>
     </>
   );
 };
-
 
 export default Nav;

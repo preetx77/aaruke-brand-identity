@@ -43,29 +43,38 @@ const ProductShowcase = ({
     fetchShopifyData();
   }, []);
 
-  // 1. ADD TO CART - Auth requirement removed! Anyone can add to cart now.
   const handleAddToCart = () => {
-    if (!liveProduct) {
+    if (!liveProduct || !liveProduct.variants) {
       alert("Product data is still loading from Shopify. Give it one more second!");
       return;
     } 
     
     try {
-      const selectedVariant = liveProduct.variants.find(
-        (variant: any) => variant.title.toLowerCase().includes(selected)
-      ) || liveProduct.variants[0];
+      // 1. Explicitly match exactly what is in your Shopify Admin!
+      let matchedVariant;
+      
+      if (selected === "gold") {
+        matchedVariant = liveProduct.variants.find((v: any) => v.title.toLowerCase().includes("gold")) 
+                         || liveProduct.variants[0]; // Fallback to 1st variant
+      } else {
+        // Looks for "Silver-plated"
+        matchedVariant = liveProduct.variants.find((v: any) => v.title.toLowerCase().includes("silver")) 
+                         || liveProduct.variants[1]; // Fallback to 2nd variant
+      }
 
-      const rawPrice = selectedVariant.price?.amount || selectedVariant.priceV2?.amount || selectedVariant.price || "3499";
+      const rawPrice = matchedVariant.price?.amount || matchedVariant.priceV2?.amount || matchedVariant.price || "3499";
 
+      // 2. Build the cart item using the REAL, unique Shopify variant ID
       const newItem: CartItemType = {
-        id: selectedVariant.id,
-        title: liveProduct.title,
-        variantTitle: selectedVariant.title,
+        id: matchedVariant.id, 
+        title: liveProduct.title || "Phoenix Necklace",
+        variantTitle: matchedVariant.title, // This will now correctly say "Gold" or "Silver-plated" from Shopify
         price: rawPrice,
-        image: selected === "gold" ? phoenixGold : phoenixSilver,
+        image: selected === "gold" ? phoenixGold : phoenixSilver, 
         quantity: 1
       };
 
+      // 3. Add to cart logic
       setCartItems(prev => {
         const existing = prev.find(item => item.id === newItem.id);
         if (existing) {
@@ -74,7 +83,6 @@ const ProductShowcase = ({
         return [...prev, newItem];
       });
       
-      // Open the cart drawer immediately
       setIsCartOpen(true);
       
     } catch (error) {
@@ -83,11 +91,9 @@ const ProductShowcase = ({
     }
   };
 
-  // 2. CHECKOUT - Auth requirement added here instead!
   const handleFinalCheckout = async () => {
     const token = localStorage.getItem("aaruke_token");
 
-    // If they aren't logged in, pop open the Auth modal over the cart!
     if (!token) {
       onOpenAuth(); 
       return; 
@@ -97,8 +103,9 @@ const ProductShowcase = ({
     try {
       const checkout = await shopifyClient.checkout.create();
       
+      // Because we used the real IDs, we just pass them directly to Shopify!
       const lineItemsToAdd = cartItems.map(item => ({
-        variantId: item.id,
+        variantId: item.id, 
         quantity: item.quantity
       }));
 
@@ -126,13 +133,13 @@ const ProductShowcase = ({
                 
                 <img
                   src={selected === "gold" ? phoenixGold : phoenixSilver}
-                  alt="Phoenix Necklace"
+                  alt={`Phoenix Necklace in ${selected}`}
                   className="w-full aspect-[3/4] object-cover grayscale-[0.2] hover:grayscale-0 transition-all duration-700"
                 />
                 
                 <div className="absolute bottom-10 left-0 w-full text-center">
-                   <p className="text-[10px] tracking-[0.3em] uppercase text-gold/60 font-sans">
-                     {selected} Variant — Symbolic Phoenix Pendant
+                   <p className="text-[10px] tracking-[0.3em] uppercase text-[#c5a059]/60 font-sans">
+                     {selected === "gold" ? "Gold" : "Silver-plated"} Variant — Symbolic Phoenix Pendant
                    </p>
                 </div>
               </div>
@@ -141,13 +148,13 @@ const ProductShowcase = ({
             <div className="grid grid-cols-2 gap-2">
               <button 
                 onClick={() => setSelected("gold")} 
-                className={`py-4 text-[10px] tracking-widest uppercase border transition-all ${selected === "gold" ? "border-gold text-gold bg-gold/5" : "border-white/5 text-muted-foreground"}`}
+                className={`py-4 text-[10px] tracking-widest uppercase border transition-all ${selected === "gold" ? "border-[#c5a059] text-[#c5a059] bg-[#c5a059]/5" : "border-white/5 text-muted-foreground"}`}
               >
                 Gold Phoenix
               </button>
               <button 
                 onClick={() => setSelected("silver")} 
-                className={`py-4 text-[10px] tracking-widest uppercase border transition-all ${selected === "silver" ? "border-gold text-gold bg-gold/5" : "border-white/5 text-muted-foreground"}`}
+                className={`py-4 text-[10px] tracking-widest uppercase border transition-all ${selected === "silver" ? "border-[#c5a059] text-[#c5a059] bg-[#c5a059]/5" : "border-white/5 text-muted-foreground"}`}
               >
                 Silver Phoenix
               </button>
@@ -156,11 +163,11 @@ const ProductShowcase = ({
 
           <ScrollReveal direction="right" delay={0.2}>
             <div className="flex flex-col h-full pt-4">
-              <span className="text-[10px] tracking-[0.4em] uppercase text-gold mb-4 font-sans">Aaruké · Founder Edition</span>
+              <span className="text-[10px] tracking-[0.4em] uppercase text-[#c5a059] mb-4 font-sans">Aarukè · Founder Edition</span>
               
               <h2 className="font-serif text-5xl md:text-6xl font-light mb-4 italic">Phoenix Necklace</h2>
               
-              <p className="font-serif text-gold/70 italic text-lg mb-5">Rise · Transform · Become</p>
+              <p className="font-serif text-[#c5a059]/70 italic text-lg mb-5">Rise · Transform · Become</p>
 
               <p className="font-serif text-base md:text-lg font-light mb-4 italic">Crafted for everyday elegance and statement moments, the Phoenix pendant blends minimal luxury with deep meaning—designed to be worn close, always.</p>
 
@@ -174,7 +181,7 @@ const ProductShowcase = ({
 
               <div className="mb-8">
                 <div className="flex items-baseline gap-4 mb-2">
-                  <span className="font-sans text-4xl text-gold font-medium tracking-tight">
+                  <span className="font-sans text-4xl text-[#c5a059] font-medium tracking-tight">
                     ₹{Math.floor(Number(liveProduct?.variants?.[0]?.price?.amount || 3499)).toLocaleString('en-IN')}
                   </span>
                   <span className="text-muted-foreground line-through text-sm font-sans">₹8,499</span>
