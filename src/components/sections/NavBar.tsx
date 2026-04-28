@@ -29,9 +29,8 @@ const Nav = ({ onOpenCart, onOpenAuth, onOpenContact }: NavProps) => {
 
   return (
     <>
-      <nav className="fixed top-0 left-0 right-0 z-50 py-3 md:py-5 backdrop-blur-md border-b border-white/10">
-        {/* Added 'relative' here so the absolutely positioned logo stays contained */}
-        <div className="w-full relative flex items-center justify-between px-4 md:px-6 max-w-7xl mx-auto">
+      <nav className="fixed top-0 left-0 right-0 z-50 py-4 md:py-5 backdrop-blur-md border-b border-white/10">
+        <div className="w-full relative flex items-center justify-between px-2 md:px-4 max-w-7xl mx-auto">
           
           {/* LEFT SIDE: Hamburger Menu (Now visible on ALL screens) */}
           <div className="flex items-center">
