@@ -43,14 +43,8 @@ const ProductShowcase = ({
     fetchShopifyData();
   }, []);
 
+  // 1. ADD TO CART - Auth requirement removed! Anyone can add to cart now.
   const handleAddToCart = () => {
-    const token = localStorage.getItem("aaruke_token");
-
-    if (!token) {
-      onOpenAuth();
-      return; 
-    }
-
     if (!liveProduct) {
       alert("Product data is still loading from Shopify. Give it one more second!");
       return;
@@ -61,7 +55,6 @@ const ProductShowcase = ({
         (variant: any) => variant.title.toLowerCase().includes(selected)
       ) || liveProduct.variants[0];
 
-      // Grab the exact dynamic price from Shopify
       const rawPrice = selectedVariant.price?.amount || selectedVariant.priceV2?.amount || selectedVariant.price || "3499";
 
       const newItem: CartItemType = {
@@ -81,6 +74,7 @@ const ProductShowcase = ({
         return [...prev, newItem];
       });
       
+      // Open the cart drawer immediately
       setIsCartOpen(true);
       
     } catch (error) {
@@ -89,7 +83,16 @@ const ProductShowcase = ({
     }
   };
 
+  // 2. CHECKOUT - Auth requirement added here instead!
   const handleFinalCheckout = async () => {
+    const token = localStorage.getItem("aaruke_token");
+
+    // If they aren't logged in, pop open the Auth modal over the cart!
+    if (!token) {
+      onOpenAuth(); 
+      return; 
+    }
+
     setIsProcessing(true);
     try {
       const checkout = await shopifyClient.checkout.create();
@@ -114,7 +117,6 @@ const ProductShowcase = ({
       <div className="max-w-6xl mx-auto">
         <div className="grid md:grid-cols-2 gap-16 items-start">
           
-          {/* LEFT COLUMN: Visuals */}
           <div className="space-y-6">
             <ScrollReveal direction="left">
               <div className="relative border border-white/5 bg-[#0a0c0c] p-1">
@@ -136,7 +138,6 @@ const ProductShowcase = ({
               </div>
             </ScrollReveal>
 
-            {/* Variant Switchers */}
             <div className="grid grid-cols-2 gap-2">
               <button 
                 onClick={() => setSelected("gold")} 
@@ -153,7 +154,6 @@ const ProductShowcase = ({
             </div>
           </div>
 
-          {/* RIGHT COLUMN: Content */}
           <ScrollReveal direction="right" delay={0.2}>
             <div className="flex flex-col h-full pt-4">
               <span className="text-[10px] tracking-[0.4em] uppercase text-gold mb-4 font-sans">Aaruké · Founder Edition</span>
@@ -172,11 +172,9 @@ const ProductShowcase = ({
                 <li className="flex items-center gap-4">— <span className="tracking-wide">Weight: 3 grams</span></li>
               </ul>
 
-              {/* UPDATED: Pricing Section now uses sans-serif and removes decimals */}
               <div className="mb-8">
                 <div className="flex items-baseline gap-4 mb-2">
-                  <span className=" font-mono text-4xl text-gold tracking-tight
-                  ">
+                  <span className="font-sans text-4xl text-gold font-medium tracking-tight">
                     ₹{Math.floor(Number(liveProduct?.variants?.[0]?.price?.amount || 3499)).toLocaleString('en-IN')}
                   </span>
                   <span className="text-muted-foreground line-through text-sm font-sans">₹8,499</span>
@@ -192,7 +190,7 @@ const ProductShowcase = ({
                   disabled={isProcessing}
                   className="w-full bg-[#c5a059] text-black py-5 text-xs tracking-[0.2em] uppercase font-bold hover:bg-[#d4af37] transition-all active:scale-[0.98]"
                 >
-                  {isProcessing ? "Connecting to Secure Checkout..." : "Add to Cart"}
+                  Add to Cart
                 </button>
                 
                 <button onClick={() => { window.location.href = "#meaning"}} className="w-full border border-white/10 py-5 text-[10px] tracking-[0.3em] uppercase hover:bg-white/5 transition-all">
