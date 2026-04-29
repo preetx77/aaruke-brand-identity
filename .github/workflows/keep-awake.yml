@@ -1,0 +1,21 @@
+name: Keep Render Site Awake
+
+# This section tells GitHub WHEN to run the action
+on:
+  schedule:
+    # This cron schedule means: "Run every 12 minutes"
+    - cron: '*/14 * * * *'
+  
+  # This allows you to manually click a "Run" button in GitHub to test it
+  workflow_dispatch:
+
+# This section tells GitHub WHAT to do
+jobs:
+  ping-site:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Send a ping to the website
+        # The 'curl' command acts like an invisible web browser visiting your site
+        # The '-s' makes it silent, and '> /dev/null' throws away the downloaded HTML to save space
+        run: curl -s https://aaruke-brand-identity.onrender.com/ > /dev/null
