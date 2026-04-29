@@ -8,9 +8,8 @@ const Hero = () => (
   <section className=" h-[100dvh] bg-[#050707]relative min-h-screen flex items-center justify-center overflow-hidden h-[60vh] md:h-screen">
     {/* Background image */}
     <div className="absolute inset-0">
-      <img src={phoenixHero} className="w-full h-full object-contain object-top md:object-hidden" />
-      {/* <img src={phoenixHero} alt="Phoenix Background" className="hidden md:block w-full h-full object-contain object-top md:object-center " loading="eager" /> */}
-      <div className="absolute inset-0 bg-gradient-to-t from-background via-background/80 to-background/20" />
+      <img src={phoenixHero} className="w-full h-full object-contain object-top md:object-hidden opacity-[.55]" />
+      <div className="absolute inset-0 bg-gradient-to-t from-background via-background/80 to-background/20 " />
     </div>
 
     <EmberParticles />
