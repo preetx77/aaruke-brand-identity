@@ -47,10 +47,10 @@ const Nav = ({ onOpenCart, onOpenAuth, onOpenContact }: NavProps) => {
           <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
             <a 
               href="/" 
-              className="font-serif italic font-light text-[1.15rem] md:text-[1.25rem] text-ivory uppercase no-underline tracking-tight" 
-              style={{ fontWeight: 200, color: "var(--ivory)", textDecoration: "none", textTransform: "uppercase" }}
+              className="font-serif font-semibold text-[1.15rem] md:text-[1.25rem] text-ivory uppercase no-underline tracking-[0.15em]" 
+              style={{ fontWeight: 600, color: "#c5a059", textDecoration: "none", textTransform: "uppercase" }}
             >
-              Aar<span style={{ color: "#c5a059" }}>u</span>ké
+              Aaruké
             </a>
           </div>
 
@@ -123,8 +123,9 @@ const Nav = ({ onOpenCart, onOpenAuth, onOpenContact }: NavProps) => {
           </button>
 
           <div className="mb-16 mt-4">
-            <span className="font-serif italic font-light text-[1.75rem] text-ivory uppercase no-underline tracking-tight" style={{ fontWeight: 200, color: "var(--ivory)", textDecoration: "none", textTransform: "uppercase" }}>
-              Aar<span className="text-[#c5a059]">u</span>ké
+            <span className="font-serif text-[1.75rem] text-ivory uppercase no-underline tracking-[0.15em]" 
+            style={{ fontWeight: 400, color: "#c5a059", textDecoration: "none", textTransform: "uppercase" }}>
+              Aaruké
             </span>
           </div>
 
@@ -132,7 +133,7 @@ const Nav = ({ onOpenCart, onOpenAuth, onOpenContact }: NavProps) => {
             <a 
               href="#product" 
               onClick={() => setIsMobileMenuOpen(false)}
-              className="text-xs md:text-sm tracking-[0.2em] uppercase text-[#c5a059] hover:text-white transition-colors"
+              className="text-xs md:text-sm tracking-[0.2em] uppercase text-white/70 hover:text-[#c5a059] transition-colors"
             >
               Shop Phoenix
             </a>

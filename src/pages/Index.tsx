@@ -42,7 +42,7 @@ const Index = () => {
         /> 
         
         <WhyDifferent />
-        <EarlyAccess />
+
       </main> 
 
       {isAuthOpen && (
