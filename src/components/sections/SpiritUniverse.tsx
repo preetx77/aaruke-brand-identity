@@ -68,12 +68,12 @@ export const SpiritUniverse = () => (
             className={`flex flex-col h-full rounded-2xl overflow-hidden bg-black/40 border transition-all duration-500 group ${
               item.status === "available" 
                 ? "border-gold/30 shadow-[0_0_20px_rgba(212,175,55,0.05)] opacity-100 hover:shadow-[0_0_20px_rgba(212,175,55,0.2)]" 
-                : "bg-[#050707] border border-white/5 opacity-40 hover:opacity-70"
+                : "bg-[#050707] border border-white/5 opacity-40 cursor-not-allowed"
             }`}
           >
            
             <div className="aspect-[4/5] w-full overflow-hidden relative shrink-0">
-              <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors duration-500 z-10" />
+              <div className="absolute inset-0 bg-black/20 transition-colors duration-500 z-10" />
               <img 
                 src={item.image} 
                 alt={item.title} 
