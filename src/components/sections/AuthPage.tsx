@@ -135,8 +135,8 @@ const AuthPage = ({ onClose }: { onClose: () => void }) => {
           <div className="absolute inset-0 bg-gradient-to-t from-[#050707] via-[#050707]/80 to-transparent"></div>
           
           <div className="relative z-10 w-full">
-            <h1 className="font-serif italic font-light text-xl text-ivory uppercase tracking-wide mb-2">
-              Aar<span className="text-[#c5a059]">u</span>kè
+            <h1 className="font-serif font-light text-xl text-ivory uppercase tracking-wide mb-2">
+              Aarukè
             </h1>
             <p className="text-[9px] tracking-widest text-[#c5a059] uppercase mb-1">
               You can easily
@@ -151,8 +151,8 @@ const AuthPage = ({ onClose }: { onClose: () => void }) => {
         <div className="w-full md:w-7/12 p-6 md:p-7 flex flex-col justify-center">
           
           <div className="md:hidden mb-3 text-center">
-             <h1 className="font-serif italic font-light text-lg text-ivory uppercase tracking-wide">
-              Aar<span className="text-[#c5a059]">u</span>kè
+             <h1 className="font-serif font-semibold text-lg text-gold uppercase tracking-widest">
+              Aarukè
             </h1>
           </div>
 
@@ -179,7 +179,7 @@ const AuthPage = ({ onClose }: { onClose: () => void }) => {
                   value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
                   required={!isLogin}
-                  placeholder="Jane Doe"
+                  placeholder="Ashok Kumar"
                   className="w-full bg-transparent border border-white/10 rounded-md px-3 py-1.5 text-[11px] text-ivory focus:border-[#c5a059] focus:outline-none transition-colors placeholder:text-ivory/20"
                 />
               </div>
@@ -192,7 +192,7 @@ const AuthPage = ({ onClose }: { onClose: () => void }) => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                placeholder="hello@example.com"
+                placeholder="ashok.kumar@example.com"
                 className="w-full bg-transparent border border-white/10 rounded-md px-3 py-1.5 text-[11px] text-ivory focus:border-[#c5a059] focus:outline-none transition-colors placeholder:text-ivory/20"
               />
             </div>

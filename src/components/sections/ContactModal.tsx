@@ -79,7 +79,7 @@ export const ContactModal = ({ isOpen, onClose }: ContactModalProps) => {
           <div>
             <h2 className="font-serif text-2xl text-white italic tracking-wide">Get in Touch</h2>
             <p className="text-[10px] tracking-[0.2em] uppercase text-[#c5a059] mt-1">
-              Bespoke Inquiries & Support
+               Inquiries & Support
             </p>
           </div>
           <button 
@@ -97,7 +97,7 @@ export const ContactModal = ({ isOpen, onClose }: ContactModalProps) => {
                 ✓
               </div>
               <p className="font-serif text-lg text-white">Message Received.</p>
-              <p className="text-xs text-white/50 font-sans">Our concierge will reach out to you shortly.</p>
+              <p className="text-xs text-white/50 font-sans">Our Team will reach out to you shortly.</p>
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-4">
@@ -110,7 +110,7 @@ export const ContactModal = ({ isOpen, onClose }: ContactModalProps) => {
                   value={formData.name}
                   onChange={handleChange}
                   required
-                  placeholder="Jane Doe"
+                  placeholder="Ashok Kumar"
                   className="w-full bg-white/5 border border-white/10 rounded-md px-4 py-2.5 text-xs text-white focus:border-[#c5a059] focus:outline-none transition-colors placeholder:text-white/20 font-sans"
                 />
               </div>
@@ -124,7 +124,7 @@ export const ContactModal = ({ isOpen, onClose }: ContactModalProps) => {
                     value={formData.email}
                     onChange={handleChange}
                     required
-                    placeholder="jane@example.com"
+                    placeholder="ashok.kumar@example.com"
                     className="w-full bg-white/5 border border-white/10 rounded-md px-4 py-2.5 text-xs text-white focus:border-[#c5a059] focus:outline-none transition-colors placeholder:text-white/20 font-sans"
                   />
                 </div>
@@ -136,7 +136,7 @@ export const ContactModal = ({ isOpen, onClose }: ContactModalProps) => {
                     value={formData.phone}
                     onChange={handleChange}
                     required
-                    placeholder="+91 98765 43210"
+                    placeholder="0000000000"
                     className="w-full bg-white/5 border border-white/10 rounded-md px-4 py-2.5 text-xs text-white focus:border-[#c5a059] focus:outline-none transition-colors placeholder:text-white/20 font-sans"
                   />
                 </div>
