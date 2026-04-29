@@ -43,38 +43,40 @@ const ProductShowcase = ({
     fetchShopifyData();
   }, []);
 
+  // Helper function to get the currently selected variant from Shopify data
+  const getSelectedVariant = () => {
+    if (!liveProduct || !liveProduct.variants) return null;
+    
+    // Explicitly match "Gold-plated" or "Silver-plated" based on the screenshot
+    const searchString = selected === "gold" ? "gold-plated" : "silver-plated";
+    
+    return liveProduct.variants.find((v: any) => v.title.toLowerCase() === searchString) 
+           || liveProduct.variants.find((v: any) => v.title.toLowerCase().includes(selected)) // Fallback just in case
+           || liveProduct.variants[selected === "gold" ? 0 : 1]; 
+  };
+
   const handleAddToCart = () => {
-    if (!liveProduct || !liveProduct.variants) {
+    const matchedVariant = getSelectedVariant();
+
+    if (!matchedVariant) {
       alert("Product data is still loading from Shopify. Give it one more second!");
       return;
     } 
     
     try {
-      // 1. Explicitly match exactly what is in your Shopify Admin!
-      let matchedVariant;
-      
-      if (selected === "gold") {
-        matchedVariant = liveProduct.variants.find((v: any) => v.title.toLowerCase().includes("gold")) 
-                         || liveProduct.variants[0]; // Fallback to 1st variant
-      } else {
-        // Looks for "Silver-plated"
-        matchedVariant = liveProduct.variants.find((v: any) => v.title.toLowerCase().includes("silver")) 
-                         || liveProduct.variants[1]; // Fallback to 2nd variant
-      }
+      const rawPrice = matchedVariant.price?.amount || matchedVariant.priceV2?.amount || matchedVariant.price || "6499";
 
-      const rawPrice = matchedVariant.price?.amount || matchedVariant.priceV2?.amount || matchedVariant.price || "3499";
-
-      // 2. Build the cart item using the REAL, unique Shopify variant ID
+      // Build the cart item using the REAL, unique Shopify variant ID
       const newItem: CartItemType = {
         id: matchedVariant.id, 
-        title: liveProduct.title || "Phoenix Necklace",
-        variantTitle: matchedVariant.title, // This will now correctly say "Gold" or "Silver-plated" from Shopify
+        title: liveProduct?.title || "Phoenix Necklace",
+        variantTitle: matchedVariant.title, // This will correctly say "Gold-plated" or "Silver-plated"
         price: rawPrice,
         image: selected === "gold" ? phoenixGold : phoenixSilver, 
         quantity: 1
       };
 
-      // 3. Add to cart logic
+      // Add to cart logic
       setCartItems(prev => {
         const existing = prev.find(item => item.id === newItem.id);
         if (existing) {
@@ -103,7 +105,6 @@ const ProductShowcase = ({
     try {
       const checkout = await shopifyClient.checkout.create();
       
-      // Because we used the real IDs, we just pass them directly to Shopify!
       const lineItemsToAdd = cartItems.map(item => ({
         variantId: item.id, 
         quantity: item.quantity
@@ -118,6 +119,10 @@ const ProductShowcase = ({
       setIsProcessing(false);
     }
   };
+
+  // Dynamically calculate the display price based on the selected variant
+  const currentVariant = getSelectedVariant();
+  const displayPrice = currentVariant?.price?.amount || currentVariant?.priceV2?.amount || currentVariant?.price || "6499";
 
   return (
     <section id="product" className="py-24 md:py-36 px-6 bg-[#050707] text-ivory">
@@ -139,7 +144,7 @@ const ProductShowcase = ({
                 
                 <div className="absolute bottom-10 left-0 w-full text-center">
                    <p className="text-[10px] tracking-[0.3em] uppercase text-[#c5a059]/60 font-sans">
-                     {selected === "gold" ? "Gold" : "Silver-plated"} Variant — Symbolic Phoenix Pendant
+                     {selected === "gold" ? "Gold-plated" : "Silver-plated"} Variant — Symbolic Phoenix Pendant
                    </p>
                 </div>
               </div>
@@ -182,7 +187,7 @@ const ProductShowcase = ({
               <div className="mb-8">
                 <div className="flex items-baseline gap-4 mb-2">
                   <span className="font-sans text-4xl text-[#c5a059] font-medium tracking-tight">
-                    ₹{Math.floor(Number(liveProduct?.variants?.[0]?.price?.amount || 3499)).toLocaleString('en-IN')}
+                    ₹{Math.floor(Number(displayPrice)).toLocaleString('en-IN')}
                   </span>
                   <span className="text-muted-foreground line-through text-sm font-sans">₹8,499</span>
                 </div>

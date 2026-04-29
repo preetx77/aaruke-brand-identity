@@ -27,7 +27,7 @@ export const ContactModal = ({ isOpen, onClose }: ContactModalProps) => {
 
     try {
       // ⚠️ IMPORTANT: Replace this URL with your actual Formspree Endpoint!
-      const response = await fetch("https://formspree.io/f/xqewvrwz", {
+      const response = await fetch("https://formspree.io/f/xjgjnjkn", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
