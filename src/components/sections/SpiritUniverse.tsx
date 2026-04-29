@@ -67,7 +67,7 @@ export const SpiritUniverse = () => (
           <div 
             className={`flex flex-col h-full rounded-2xl overflow-hidden bg-black/40 border transition-all duration-500 group ${
               item.status === "available" 
-                ? "border-gold/30 shadow-[0_0_20px_rgba(212,175,55,0.05)] opacity-100 hover:shadow-[0_0_20px_rgba(212,175,55,0.2)]" 
+                ? "border-gold/50 shadow-[0_0_20px_rgba(212,175,55,0.05)] opacity-100 hover:shadow-[0_0_100px_rgba(212,175,55,0.2)]" 
                 : "bg-[#050707] border border-white/5 opacity-40 cursor-not-allowed"
             }`}
           >
