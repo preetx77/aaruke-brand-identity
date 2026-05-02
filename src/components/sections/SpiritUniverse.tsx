@@ -1,8 +1,8 @@
 import { ScrollReveal } from "../ScrollReveal";
-import Phoenix from "@/assets/Phoenix.svg";
-import Lion from "@/assets/Lion.svg";
-import Owl from "@/assets/Owl.svg";
-import Crab from "@/assets/Crab.svg";
+import Phoenix from "@/assets/Phoenix.webp";
+import Lion from "@/assets/Lion.webp";
+import Owl from "@/assets/Owl.webp";
+import Crab from "@/assets/Crab.webp";
 
 
 const spiritAnimals = [
