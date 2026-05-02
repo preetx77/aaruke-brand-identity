@@ -4,7 +4,7 @@ name: Keep Render Site Awake
 on:
   schedule:
     # This cron schedule means: "Run every 14 minutes"
-    - cron: '*/14 * * * *'
+    - cron: '*/5 * * * *'
   
   # This allows you to manually click a "Run" button in GitHub to test it
   workflow_dispatch:
