@@ -94,6 +94,7 @@ const ProductShowcase = ({
   };
 
   const handleFinalCheckout = async () => {
+    console.log("My Razorpay Key is:", import.meta.env.VITE_RAZORPAY_KEY_ID);
     const token = localStorage.getItem("aaruke_token");
 
     if (!token) {

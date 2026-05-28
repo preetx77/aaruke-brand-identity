@@ -16,7 +16,7 @@ const Hero = () => (
 
     <div className="relative z-10 max-w-3xl mx-auto text-center px-10 md:px-14 pt-24 pb-16">
       <ScrollReveal>
-        <p className="tracking-luxury uppercase text-[0.68rem] font-sans mb-5 mt-8 font-light ">
+        <p className="tracking-luxury uppercase text-[0.8rem] font-sans mb-5 mt-8 font-light ">
           Spirit Animal Jewellery
         </p>
       </ScrollReveal>
@@ -24,17 +24,18 @@ const Hero = () => (
 
       {/* font-serif text-5xl sm:text-6xl md:text-7xl font-light leading-[0.95] mb-6 text-ivory */}
       <ScrollReveal delay={0.15}>
-        <h1 className="font-serif text-5xl sm:text-6xl md:text-7xl font-light leading-[0.95] mb-6 text-ivory">
-          <span className="block text-4xl sm:text-5xl md:text-7xl text-ivory">
+        <h1 className="font-serif text-3xl sm:text-6xl md:text-7xl font-light leading-[0.95] mb-6 text-ivory">
+          <span className="block text-4xl sm:text-5xl md:text-6xl text-ivory">
             Phoenix Necklace
           </span>
-          <span className="block text-4xl sm:text-5xl md:text-7xl text-ivory mt-1 md:mt-2">
+          <span className="block text-4xl sm:text-5xl md:text-6xl text-ivory mt-1 md:mt-2">
             Symbol of <span className="italic text-gold">Rebirth</span>
             </span>
         </h1>
+      </ScrollReveal>
 
-        {/* <div className="text-center">Phoenix Necklace</div>  
-           <div style={{ fontSize: '3rem' }}>Symbol of <span className="text-gold" style={{fontStyle:"italic"}}>Rebirth</span></div> */}
+      <ScrollReveal delay={0.25}>
+        <p className="text-wrap font-serif block text-xl md:text-xl text-ivory max-w-xl mx-auto mb-5 font-light leading-relaxed mx-20"> A symbolic pendant inspired by transformation,resilience, and the quiet strength of becoming</p>
       </ScrollReveal>
 
       <ScrollReveal delay={0.3}>
