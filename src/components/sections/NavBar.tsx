@@ -1,13 +1,7 @@
 import { useState, useEffect } from "react";
 import { ShoppingCart, Menu, X, User } from "lucide-react";
 
-interface NavProps {
-  onOpenCart: () => void;
-  onOpenAuth: () => void;
-  onOpenContact: () => void;
-}
-
-const Nav = ({ onOpenCart, onOpenAuth, onOpenContact }: NavProps) => {
+const NavBar = ({ onOpenCart, onOpenAuth, onOpenContact, onNavigate }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -32,9 +26,8 @@ const Nav = ({ onOpenCart, onOpenAuth, onOpenContact }: NavProps) => {
       <nav className="fixed top-0 left-0 right-0 z-50 py-4 md:py-5 backdrop-blur-md border-b border-white/10">
         <div className="w-full grid grid-cols-3 items-center px-4 max-w-7xl mx-auto">
           
-          {/* LEFT SIDE: Hamburger (Mobile) OR Logo (Desktop) */}
+          {/* LEFT SIDE: Hamburger OR Desktop Logo */}
           <div className="flex items-center justify-start">
-            {/* Mobile Hamburger */}
             <button 
               onClick={() => setIsMenuOpen(true)}
               className="md:hidden text-white/70 hover:text-[#c5a059] transition-colors"
@@ -43,7 +36,7 @@ const Nav = ({ onOpenCart, onOpenAuth, onOpenContact }: NavProps) => {
               <Menu strokeWidth={1.5} className="w-6 h-6" />
             </button>
 
-            {/* Desktop Logo (Acts as Menu Trigger) */}
+            {/* Desktop Logo -> RESTORED: Opens the menu */}
             <button 
               onClick={() => setIsMenuOpen(true)}
               className="hidden md:block font-serif font-semibold text-[1.25rem] text-[#c5a059] hover:text-white transition-colors uppercase tracking-[0.15em]"
@@ -52,30 +45,37 @@ const Nav = ({ onOpenCart, onOpenAuth, onOpenContact }: NavProps) => {
             </button>
           </div>
 
-          {/* CENTER: Logo (Mobile Only) */}
+          {/* CENTER: Mobile Logo -> Navigates Home */}
           <div className="flex items-center justify-center">
-            <a 
-              href="/" 
+            <button 
+              onClick={() => {
+                setIsMenuOpen(false);
+                onNavigate("home");
+              }} 
               className="md:hidden font-serif font-semibold text-[1.15rem] text-[#c5a059] uppercase no-underline tracking-[0.15em]" 
             >
               Aaruké
-            </a>
+            </button>
           </div>
 
           {/* RIGHT SIDE: Links, Auth, and Cart */}
           <div className="flex items-center justify-end gap-5 md:gap-6">
             
-            {/* Desktop-only Shop Link */}
-            <a href="#product" className="hidden md:block font-sans text-xs tracking-widest uppercase text-[#c5a059] hover:text-white transition-colors">
-              Shop Phoenix
-            </a>
+            {/* Desktop Links */}
+            <div className="hidden md:flex items-center gap-6">
+              <button 
+                onClick={() => onNavigate("home")}
+                className="font-sans text-xs tracking-widest uppercase text-[#c5a059] hover:text-white transition-colors"
+              >
+                Shop Phoenix
+              </button>
+            </div>
 
             {/* Authentication Button */}
             {isLoggedIn ? (
               <button 
                 onClick={handleLogout}
                 className="text-white/70 hover:text-[#c5a059] transition-colors flex items-center justify-center"
-                aria-label="Sign Out"
               >
                 <span className="hidden md:block font-sans text-xs tracking-widest uppercase">Sign Out</span>
                 <User className="w-5 h-5 md:hidden" strokeWidth={1.5} />
@@ -84,21 +84,17 @@ const Nav = ({ onOpenCart, onOpenAuth, onOpenContact }: NavProps) => {
               <button 
                 onClick={onOpenAuth}
                 className="text-white/70 hover:text-[#c5a059] transition-colors flex items-center justify-center"
-                aria-label="Sign In"
               >
                 <span className="hidden md:block font-sans text-xs tracking-widest uppercase">Sign In</span>
                 <User className="w-5 h-5 md:hidden" strokeWidth={1.5} />
               </button>
             )}
 
-            {/* Divider Line */}
             <div className="h-4 w-[1px] bg-white/20"></div>
 
-            {/* Permanent Cart Icon */}
             <button 
               onClick={onOpenCart}
               className="flex items-center justify-center text-white/70 hover:text-[#c5a059] transition-all hover:scale-110 active:scale-95"
-              aria-label="Open Cart"
             >
               <ShoppingCart className="w-5 h-5" strokeWidth={1.5} />
             </button>
@@ -107,7 +103,7 @@ const Nav = ({ onOpenCart, onOpenAuth, onOpenContact }: NavProps) => {
         </div>
       </nav>
 
-      {/* --- SIDE MENU DRAWER (Restored) --- */}
+      {/* --- SIDE MENU DRAWER --- */}
       <div 
         className={`fixed inset-0 z-[120] transition-opacity duration-300 ${
           isMenuOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
@@ -132,28 +128,42 @@ const Nav = ({ onOpenCart, onOpenAuth, onOpenContact }: NavProps) => {
 
           <div className="mb-16 mt-4">
             <span 
-              className="font-serif text-[1.75rem] text-ivory uppercase no-underline tracking-[0.15em]" 
-              style={{ fontWeight: 400, color: "#c5a059", textDecoration: "none", textTransform: "uppercase" }}
+              className="font-serif text-[1.75rem] text-[#c5a059] uppercase tracking-[0.15em] font-medium" 
             >
               Aaruké
             </span>
           </div>
 
-          <div className="flex flex-col space-y-8 flex-grow">
-            <a 
-              href="#product" 
-              onClick={() => setIsMenuOpen(false)}
-              className="text-xs md:text-sm tracking-[0.2em] uppercase text-white/70 hover:text-[#c5a059] transition-colors"
+          <div className="flex flex-col space-y-8 flex-grow items-start">
+            <button 
+              onClick={() => {
+                setIsMenuOpen(false);
+                onNavigate("home");
+              }}
+              className="text-xs md:text-sm tracking-[0.2em] uppercase text-white/80 hover:text-[#c5a059] transition-colors"
             >
               Shop Phoenix
-            </a>
-            <a 
-              href="#meaning" 
-              onClick={() => setIsMenuOpen(false)}
-              className="text-xs md:text-sm tracking-[0.2em] uppercase text-white/70 hover:text-[#c5a059] transition-colors"
+            </button>
+            <button 
+              onClick={() => {
+                setIsMenuOpen(false);
+                onNavigate("home");
+                setTimeout(() => document.getElementById('meaning')?.scrollIntoView({ behavior: 'smooth' }), 100);
+              }}
+              className="text-xs md:text-sm tracking-[0.2em] uppercase text-white/80 hover:text-[#c5a059] transition-colors"
             >
               Read The Meaning
-            </a>
+            </button>
+            <button 
+              onClick={() => {
+                setIsMenuOpen(false);
+                onNavigate("articles");
+                window.scrollTo(0, 0); 
+              }}
+              className="text-xs md:text-sm tracking-[0.2em] uppercase text-white/80 hover:text-[#c5a059] transition-colors"
+            >
+              Articles
+            </button>
           </div>
 
           <div className="mt-auto pt-8 border-t border-white/10 flex flex-col items-start">
@@ -173,4 +183,4 @@ const Nav = ({ onOpenCart, onOpenAuth, onOpenContact }: NavProps) => {
   );
 };
 
-export default Nav;
+export default NavBar;
