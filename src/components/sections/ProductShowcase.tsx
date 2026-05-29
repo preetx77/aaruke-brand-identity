@@ -87,7 +87,6 @@ const ProductShowcase = ({
     }
   };
 
-  // --- UPDATED: Direct to Checkout ---
   const handleBuyNow = async () => {
     const matchedVariant = getSelectedVariant();
 
@@ -99,10 +98,7 @@ const ProductShowcase = ({
     setIsProcessing(true);
 
     try {
-      // 1. Create a fresh checkout instance on Shopify
       const checkout = await shopifyClient.checkout.create();
-      
-      // 2. Format just this single item for checkout
       const lineItemsToAdd = [
         {
           variantId: matchedVariant.id,
@@ -110,10 +106,7 @@ const ProductShowcase = ({
         }
       ];
 
-      // 3. Add the item to the Shopify checkout
       const updatedCheckout = await shopifyClient.checkout.addLineItems(checkout.id, lineItemsToAdd);
-      
-      // 4. Redirect immediately to the payment page (Guest checkout allowed)
       window.location.href = updatedCheckout.webUrl;
       
     } catch (error) {
@@ -123,7 +116,6 @@ const ProductShowcase = ({
     }
   };
 
-  // --- UPDATED: Guest Checkout Allowed for Cart Drawer ---
   const handleFinalCheckout = async () => {
     setIsProcessing(true);
     
@@ -145,18 +137,33 @@ const ProductShowcase = ({
   };
 
   const currentVariant = getSelectedVariant();
-  // Defaulting to 6999 as per the mockup if Shopify data isn't loaded yet
   const displayPrice = currentVariant?.price?.amount || currentVariant?.priceV2?.amount || currentVariant?.price || "6999";
 
   return (
     <section id="product" className="py-24 md:py-36 px-6 bg-[#0a0c0c] text-ivory min-h-screen flex items-center">
       <div className="max-w-[1200px] mx-auto w-full">
-        <div className="grid md:grid-cols-2 gap-16 md:gap-24 items-start">
+        <div className="grid md:grid-cols-2 gap-12 md:gap-24 items-start">
           
+          {/* --- MOBILE TITLE BLOCK (Hidden on Desktop) --- */}
+          <div className="md:hidden flex flex-col pt-4">
+            <ScrollReveal>
+              <span className="text-[9px] tracking-[0.2em] uppercase text-muted-foreground mb-4 block font-sans">
+                First Release · Limited Pieces
+              </span>
+              
+              <h2 className="font-serif text-4xl font-light mb-2 text-white">The Phoenix Necklace</h2>
+              
+              <p className="font-serif text-muted-foreground italic text-base mb-6">Rise · Transform · Become</p>
+
+              <p className="font-serif text-sm text-ivory/80 italic mb-2">
+                A personal symbol designed to stay with you through phases of transformation.
+              </p>
+            </ScrollReveal>
+          </div>
+
           {/* LEFT COLUMN - IMAGES */}
           <div className="space-y-6">
             <ScrollReveal direction="left">
-              {/* Main Image Container */}
               <div className="relative rounded-2xl overflow-hidden bg-[#111313] aspect-[4/5]">
                 <div className="absolute top-6 right-0 bg-[#c5a059] text-black text-[9px] font-bold tracking-widest uppercase py-2 px-4 z-20 rounded-l-sm">
                   Founder Edition
@@ -169,7 +176,6 @@ const ProductShowcase = ({
                 />
               </div>
 
-              {/* 3 Thumbnails */}
               <div className="grid grid-cols-3 gap-4 mt-6 px-4 md:px-12">
                 <div className="aspect-square rounded-xl overflow-hidden bg-[#1a1c1c] border border-white/10 cursor-pointer">
                   <img src={selected === "gold" ? phoenixGold : phoenixSilver} alt="Thumbnail 1" className="w-full h-full object-cover opacity-60 hover:opacity-100 transition-opacity" />
@@ -188,19 +194,23 @@ const ProductShowcase = ({
           <ScrollReveal direction="right" delay={0.2}>
             <div className="flex flex-col h-full pt-4 md:pt-10">
               
-              <span className="text-[9px] tracking-[0.2em] uppercase text-muted-foreground mb-4 font-sans">
-                First Release · Limited Pieces
-              </span>
-              
-              <h2 className="font-serif text-4xl md:text-5xl font-light mb-2 text-white">The Phoenix Necklace</h2>
-              
-              <p className="font-serif text-muted-foreground italic text-base mb-8">Rise · Transform · Become</p>
+              {/* --- DESKTOP TITLE BLOCK (Hidden on Mobile) --- */}
+              <div className="hidden md:block">
+                <span className="text-[9px] tracking-[0.2em] uppercase text-muted-foreground mb-4 block font-sans">
+                  First Release · Limited Pieces
+                </span>
+                
+                <h2 className="font-serif text-4xl md:text-5xl font-light mb-2 text-white">The Phoenix Necklace</h2>
+                
+                <p className="font-serif text-muted-foreground italic text-base mb-8">Rise · Transform · Become</p>
 
-              <p className="font-serif text-sm md:text-base text-ivory/80 italic mb-8">
-                A personal symbol designed to stay with you through phases of transformation.
-              </p>
+                <p className="font-serif text-sm md:text-base text-ivory/80 italic mb-8">
+                  A personal symbol designed to stay with you through phases of transformation.
+                </p>
+              </div>
 
-              <hr className="border-white/5 mb-8" />
+              {/* Adjust margin to account for mobile vs desktop spacing */}
+              <hr className="border-white/5 mb-8 mt-4 md:mt-0" />
 
               {/* Variant Selector */}
               <div className="mb-8">
