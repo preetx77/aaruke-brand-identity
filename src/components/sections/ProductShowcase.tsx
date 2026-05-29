@@ -43,15 +43,11 @@ const ProductShowcase = ({
     fetchShopifyData();
   }, []);
 
-  // Helper function to get the currently selected variant from Shopify data
   const getSelectedVariant = () => {
     if (!liveProduct || !liveProduct.variants) return null;
-    
-    // Explicitly match "Gold-plated" or "Silver-plated" based on the screenshot
     const searchString = selected === "gold" ? "gold-plated" : "silver-plated";
-    
     return liveProduct.variants.find((v: any) => v.title.toLowerCase() === searchString) 
-           || liveProduct.variants.find((v: any) => v.title.toLowerCase().includes(selected)) // Fallback just in case
+           || liveProduct.variants.find((v: any) => v.title.toLowerCase().includes(selected)) 
            || liveProduct.variants[selected === "gold" ? 0 : 1]; 
   };
 
@@ -64,19 +60,17 @@ const ProductShowcase = ({
     } 
     
     try {
-      const rawPrice = matchedVariant.price?.amount || matchedVariant.priceV2?.amount || matchedVariant.price || "6499";
+      const rawPrice = matchedVariant.price?.amount || matchedVariant.priceV2?.amount || matchedVariant.price || "6999";
 
-      // Build the cart item using the REAL, unique Shopify variant ID
       const newItem: CartItemType = {
         id: matchedVariant.id, 
         title: liveProduct?.title || "Phoenix Necklace",
-        variantTitle: matchedVariant.title, // This will correctly say "Gold-plated" or "Silver-plated"
+        variantTitle: matchedVariant.title,
         price: rawPrice,
         image: selected === "gold" ? phoenixGold : phoenixSilver, 
         quantity: 1
       };
 
-      // Add to cart logic
       setCartItems(prev => {
         const existing = prev.find(item => item.id === newItem.id);
         if (existing) {
@@ -91,6 +85,12 @@ const ProductShowcase = ({
       console.error("Error adding to cart:", error);
       alert("Failed to add item to cart. Please try again.");
     }
+  };
+
+  const handleBuyNow = () => {
+    // Adds to cart and opens it. If you want this to skip the cart and go straight 
+    // to Shopify checkout, let me know and we can adjust this specific function!
+    handleAddToCart();
   };
 
   const handleFinalCheckout = async () => {
@@ -112,7 +112,6 @@ const ProductShowcase = ({
       }));
 
       const updatedCheckout = await shopifyClient.checkout.addLineItems(checkout.id, lineItemsToAdd);
-      
       window.location.href = updatedCheckout.webUrl;
     } catch (error) {
       console.error("Shopify Checkout Error:", error);
@@ -121,95 +120,160 @@ const ProductShowcase = ({
     }
   };
 
-  // Dynamically calculate the display price based on the selected variant
   const currentVariant = getSelectedVariant();
-  const displayPrice = currentVariant?.price?.amount || currentVariant?.priceV2?.amount || currentVariant?.price || "6499";
+  // Defaulting to 6999 as per the mockup if Shopify data isn't loaded yet
+  const displayPrice = currentVariant?.price?.amount || currentVariant?.priceV2?.amount || currentVariant?.price || "6999";
 
   return (
-    <section id="product" className="py-24 md:py-36 px-6 bg-[#050707] text-ivory">
-      <div className="max-w-6xl mx-auto">
-        <div className="grid md:grid-cols-2 gap-16 items-start">
+    <section id="product" className="py-24 md:py-36 px-6 bg-[#0a0c0c] text-ivory min-h-screen flex items-center">
+      <div className="max-w-[1200px] mx-auto w-full">
+        <div className="grid md:grid-cols-2 gap-16 md:gap-24 items-start">
           
+          {/* LEFT COLUMN - IMAGES */}
           <div className="space-y-6">
             <ScrollReveal direction="left">
-              <div className="relative border border-white/5 bg-[#0a0c0c] p-1">
-                <div className="absolute top-6 right-0 bg-[#e65100] text-white text-[10px] tracking-widest uppercase py-1.5 px-4 z-20">
+              {/* Main Image Container */}
+              <div className="relative rounded-2xl overflow-hidden bg-[#111313] aspect-[4/5]">
+                <div className="absolute top-6 right-0 bg-[#c5a059] text-black text-[9px] font-bold tracking-widest uppercase py-2 px-4 z-20 rounded-l-sm">
                   Founder Edition
                 </div>
                 
                 <img
                   src={selected === "gold" ? phoenixGold : phoenixSilver}
                   alt={`Phoenix Necklace in ${selected}`}
-                  className="w-full aspect-[3/4] object-cover grayscale-[0.2] hover:grayscale-0 transition-all duration-700"
+                  className="w-full h-full object-cover grayscale-[0.1] hover:grayscale-0 transition-all duration-700"
                 />
-                
-                <div className="absolute bottom-10 left-0 w-full text-center">
-                   <p className="text-[10px] tracking-[0.3em] uppercase text-[#c5a059]/60 font-sans">
-                     {selected === "gold" ? "Gold-plated" : "Silver-plated"} Variant — Symbolic Phoenix Pendant
-                   </p>
+              </div>
+
+              {/* 3 Thumbnails */}
+              <div className="grid grid-cols-3 gap-4 mt-6 px-4 md:px-12">
+                <div className="aspect-square rounded-xl overflow-hidden bg-[#1a1c1c] border border-white/10 cursor-pointer">
+                  <img src={selected === "gold" ? phoenixGold : phoenixSilver} alt="Thumbnail 1" className="w-full h-full object-cover opacity-60 hover:opacity-100 transition-opacity" />
+                </div>
+                <div className="aspect-square rounded-xl overflow-hidden bg-[#1a1c1c] border border-white/5 cursor-pointer">
+                   <img src={selected === "gold" ? phoenixGold : phoenixSilver} alt="Thumbnail 1" className="w-full h-full object-cover opacity-60 hover:opacity-100 transition-opacity" />
+                </div>
+                <div className="aspect-square rounded-xl overflow-hidden bg-[#1a1c1c] border border-white/5 cursor-pointer">
+                   <img src={selected === "gold" ? phoenixGold : phoenixSilver} alt="Thumbnail 1" className="w-full h-full object-cover opacity-60 hover:opacity-100 transition-opacity" />
                 </div>
               </div>
             </ScrollReveal>
-
-            <div className="grid grid-cols-2 gap-2">
-              <button 
-                onClick={() => setSelected("gold")} 
-                className={`py-4 text-[10px] tracking-widest uppercase border transition-all ${selected === "gold" ? "border-[#c5a059] text-[#c5a059] bg-[#c5a059]/5" : "border-white/5 text-muted-foreground"}`}
-              >
-                Gold Phoenix
-              </button>
-              <button 
-                onClick={() => setSelected("silver")} 
-                className={`py-4 text-[10px] tracking-widest uppercase border transition-all ${selected === "silver" ? "border-[#c5a059] text-[#c5a059] bg-[#c5a059]/5" : "border-white/5 text-muted-foreground"}`}
-              >
-                Silver Phoenix
-              </button>
-            </div>
           </div>
 
+          {/* RIGHT COLUMN - DETAILS */}
           <ScrollReveal direction="right" delay={0.2}>
-            <div className="flex flex-col h-full pt-4">
-              <span className="text-[10px] tracking-[0.4em] uppercase text-[#c5a059] mb-4 font-sans">Aarukè · Founder Edition</span>
+            <div className="flex flex-col h-full pt-4 md:pt-10">
               
-              <h2 className="font-serif text-5xl md:text-6xl font-light mb-4 italic">Phoenix Necklace</h2>
+              <span className="text-[9px] tracking-[0.2em] uppercase text-muted-foreground mb-4 font-sans">
+                First Release · Limited Pieces
+              </span>
               
-              <p className="font-serif text-[#c5a059]/70 italic text-lg mb-5">Rise · Transform · Become</p>
+              <h2 className="font-serif text-4xl md:text-5xl font-light mb-2 text-white">The Phoenix Necklace</h2>
+              
+              <p className="font-serif text-muted-foreground italic text-base mb-8">Rise · Transform · Become</p>
 
-              <p className="font-serif text-base md:text-lg font-light mb-4 italic">Crafted for everyday elegance and statement moments, the Phoenix pendant blends minimal luxury with deep meaning—designed to be worn close, always.</p>
+              <p className="font-serif text-sm md:text-base text-ivory/80 italic mb-8">
+                A personal symbol designed to stay with you through phases of transformation.
+              </p>
 
-              <ul className="space-y-4 mb-12 font-sans text-sm text-ivory/60 font-light border-y border-white/5 py-8">
-                <li className="flex items-center gap-4">— <span className="tracking-wide">Material: Premium brass base with 22kt gold plating / high-polish silver finish</span></li>
-                <li className="flex items-center gap-4">— <span className="tracking-wide">Plating Durability: Up to 18 months with proper care</span></li>
-                <li className="flex items-center gap-4">— <span className="tracking-wide">Finish: Anti-tarnish coated for longer-lasting shine</span></li>
-                <li className="flex items-center gap-4">— <span className="tracking-wide">Skin Safety: Hypoallergenic & skin-friendly</span></li>
-                <li className="flex items-center gap-4">— <span className="tracking-wide">Weight: 3 grams</span></li>
-              </ul>
+              <hr className="border-white/5 mb-8" />
 
+              {/* Variant Selector */}
               <div className="mb-8">
-                <div className="flex items-baseline gap-4 mb-2">
-                  <span className="font-sans text-4xl text-[#c5a059] font-medium tracking-tight">
-                    ₹{Math.floor(Number(displayPrice)).toLocaleString('en-IN')}
-                  </span>
-                  <span className="text-muted-foreground line-through text-sm font-sans">₹8,499</span>
+                <span className="text-[9px] tracking-[0.2em] uppercase text-muted-foreground mb-4 block font-sans">
+                  Select Variant
+                </span>
+                <div className="grid grid-cols-2 gap-4">
+                  <button 
+                    onClick={() => setSelected("gold")} 
+                    className={`py-4 px-4 flex items-center justify-center gap-3 text-xs tracking-widest uppercase border transition-all rounded-sm ${selected === "gold" ? "border-[#c5a059] text-[#c5a059] bg-[#c5a059]/5" : "border-white/10 text-muted-foreground hover:border-white/30"}`}
+                  >
+                    <span className="w-3 h-3 rounded-full bg-[#c5a059]"></span>
+                    Gold Phoenix
+                  </button>
+                  <button 
+                    onClick={() => setSelected("silver")} 
+                    className={`py-4 px-4 flex items-center justify-center gap-3 text-xs tracking-widest uppercase border transition-all rounded-sm ${selected === "silver" ? "border-[#c5a059] text-[#c5a059] bg-[#c5a059]/5" : "border-white/10 text-muted-foreground hover:border-white/30"}`}
+                  >
+                    <span className="w-3 h-3 rounded-full bg-[#e2e8f0]"></span>
+                    Silver Phoenix
+                  </button>
                 </div>
-                <p className="text-[10px] tracking-widest text-orange-500 uppercase font-medium">
-                  🔥 Founder Pricing · First 50 Pieces Only
-                </p>
               </div>
 
-              <div className="space-y-3">
-                <button 
-                  onClick={handleAddToCart}
-                  disabled={isProcessing}
-                  className="w-full bg-[#c5a059] text-black py-5 text-xs tracking-[0.2em] uppercase font-bold hover:bg-[#d4af37] transition-all active:scale-[0.98]"
-                >
-                  Add to Cart
-                </button>
+              {/* 2x2 Feature Grid */}
+              <div className="grid grid-cols-2 gap-3 mb-10">
+                <div className="border border-white/5 bg-white/[0.02] p-4 flex gap-3 items-center rounded-sm">
+                  <svg className="w-4 h-4 text-muted-foreground shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                  <div>
+                    <p className="text-[8px] uppercase tracking-widest text-muted-foreground mb-0.5">Plating Life</p>
+                    <p className="text-[10px] text-ivory/90">Up to 18 months with care</p>
+                  </div>
+                </div>
                 
-                <button onClick={() => { window.location.href = "#meaning"}} className="w-full border border-white/10 py-5 text-[10px] tracking-[0.3em] uppercase hover:bg-white/5 transition-all">
+                <div className="border border-white/5 bg-white/[0.02] p-4 flex gap-3 items-center rounded-sm">
+                  <svg className="w-4 h-4 text-muted-foreground shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>
+                  <div>
+                    <p className="text-[8px] uppercase tracking-widest text-muted-foreground mb-0.5">Finish</p>
+                    <p className="text-[10px] text-ivory/90">Anti-tarnish coated</p>
+                  </div>
+                </div>
+
+                <div className="border border-white/5 bg-white/[0.02] p-4 flex gap-3 items-center rounded-sm">
+                  <svg className="w-4 h-4 text-muted-foreground shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" /></svg>
+                  <div>
+                    <p className="text-[8px] uppercase tracking-widest text-muted-foreground mb-0.5">Skin Safety</p>
+                    <p className="text-[10px] text-ivory/90">Hypoallergenic & skin-friendly</p>
+                  </div>
+                </div>
+
+                <div className="border border-white/5 bg-white/[0.02] p-4 flex gap-3 items-center rounded-sm">
+                  <svg className="w-4 h-4 text-muted-foreground shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3" /></svg>
+                  <div>
+                    <p className="text-[8px] uppercase tracking-widest text-muted-foreground mb-0.5">Weight</p>
+                    <p className="text-[10px] text-ivory/90">3 grams</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Price */}
+              <div className="mb-8">
+                <span className="font-serif text-4xl text-white font-light tracking-tight">
+                  ₹{Math.floor(Number(displayPrice)).toLocaleString('en-IN')}
+                </span>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="space-y-4 mb-6">
+                <div className="flex gap-4">
+                  <button 
+                    onClick={handleBuyNow}
+                    disabled={isProcessing}
+                    className="flex-1 bg-[#c5a059] text-black py-4 text-xs tracking-[0.2em] uppercase font-bold hover:bg-[#d4af37] transition-all rounded-sm shadow-[0_0_15px_rgba(197,160,89,0.2)]"
+                  >
+                    Buy Now
+                  </button>
+                  <button 
+                    onClick={handleAddToCart}
+                    disabled={isProcessing}
+                    className="flex-1 border border-[#c5a059] text-[#c5a059] py-4 text-xs tracking-[0.2em] uppercase font-bold hover:bg-[#c5a059]/10 transition-all rounded-sm"
+                  >
+                    Add to Cart
+                  </button>
+                </div>
+                
+                <button onClick={() => { window.location.href = "#meaning"}} className="w-full border border-white/10 bg-[#0a0c0c] py-4 text-[9px] tracking-[0.3em] uppercase hover:bg-white/5 transition-all text-muted-foreground rounded-sm">
                   Read the Meaning
                 </button>
               </div>
+
+              {/* Footer Row */}
+              <div className="flex justify-between items-center text-[8px] tracking-widest uppercase text-muted-foreground/60 border-t border-white/5 pt-6 mt-4">
+                <span>Carefully packed</span>
+                <span>Secure Checkout</span>
+                <span>Limited First Drop</span>
+              </div>
+
             </div>
           </ScrollReveal>
 

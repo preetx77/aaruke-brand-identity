@@ -1,8 +1,11 @@
 import Nav from "@/components/sections/NavBar";
 import Hero from "@/components/sections/HeroSection";
 import BrandStory from "@/components/sections/BrandStory";
+import PackagingExperience from "@/components/sections/PackagingExperience";
 import SpiritUniverse from "@/components/sections/SpiritUniverse";
 import Meaning from "@/components/sections/Meaning";
+import QualityCare from "@/components/sections/QualityCare";
+import AboutAaruke from "@/components/sections/AboutAaruke";
 import ProductShowcase from "@/components/sections/ProductShowcase";
 import Footer from "@/components/sections/Footer";
 import { Ear } from "lucide-react"; // Assuming you still need this for something
@@ -32,14 +35,17 @@ const Index = () => {
       <main>
         <Hero />
         <BrandStory />
-        <SpiritUniverse />
-        <Meaning />
-        
         <ProductShowcase 
           onOpenAuth={() => setIsAuthOpen(true)} 
           isCartOpen={isCartOpen}
           setIsCartOpen={setIsCartOpen}
-        /> 
+        />
+        <Meaning />
+        <SpiritUniverse />
+        <PackagingExperience />
+        <QualityCare />
+        <AboutAaruke />
+         
         
         <WhyDifferent />
 
