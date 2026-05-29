@@ -29,6 +29,7 @@ function WhyDifferent() {
               <h3 style={{ fontFamily:"var(--sans)", fontSize:"0.7rem", letterSpacing:"0.2em", textTransform:"uppercase", color:"var(--gold)", marginBottom:"0.5rem" }}>{i.title}</h3>
               <p style={{ fontFamily:"var(--serif)", fontStyle:"italic", fontSize:"0.88rem", color:"var(--ivory-dim)", lineHeight:1.6 }}>{i.text}</p>
             </div>
+            
             </ScrollReveal>
              
           ))}

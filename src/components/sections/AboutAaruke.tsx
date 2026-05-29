@@ -1,4 +1,6 @@
 import { ScrollReveal } from "../ScrollReveal";
+import StarBorder from '../StarBorder'
+
 // TODO: Import your actual image here
 // import aboutImg from "@/assets/about-aaruke.jpg"; 
 

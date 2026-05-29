@@ -87,22 +87,46 @@ const ProductShowcase = ({
     }
   };
 
-  const handleBuyNow = () => {
-    // Adds to cart and opens it. If you want this to skip the cart and go straight 
-    // to Shopify checkout, let me know and we can adjust this specific function!
-    handleAddToCart();
-  };
+  // --- UPDATED: Direct to Checkout ---
+  const handleBuyNow = async () => {
+    const matchedVariant = getSelectedVariant();
 
-  const handleFinalCheckout = async () => {
-    console.log("My Razorpay Key is:", import.meta.env.VITE_RAZORPAY_KEY_ID);
-    const token = localStorage.getItem("aaruke_token");
-
-    if (!token) {
-      onOpenAuth(); 
-      return; 
+    if (!matchedVariant) {
+      alert("Product data is still loading from Shopify. Give it one more second!");
+      return;
     }
 
     setIsProcessing(true);
+
+    try {
+      // 1. Create a fresh checkout instance on Shopify
+      const checkout = await shopifyClient.checkout.create();
+      
+      // 2. Format just this single item for checkout
+      const lineItemsToAdd = [
+        {
+          variantId: matchedVariant.id,
+          quantity: 1
+        }
+      ];
+
+      // 3. Add the item to the Shopify checkout
+      const updatedCheckout = await shopifyClient.checkout.addLineItems(checkout.id, lineItemsToAdd);
+      
+      // 4. Redirect immediately to the payment page (Guest checkout allowed)
+      window.location.href = updatedCheckout.webUrl;
+      
+    } catch (error) {
+      console.error("Shopify Buy Now Error:", error);
+      alert("Checkout is currently unavailable. Please try again later.");
+      setIsProcessing(false);
+    }
+  };
+
+  // --- UPDATED: Guest Checkout Allowed for Cart Drawer ---
+  const handleFinalCheckout = async () => {
+    setIsProcessing(true);
+    
     try {
       const checkout = await shopifyClient.checkout.create();
       
@@ -151,10 +175,10 @@ const ProductShowcase = ({
                   <img src={selected === "gold" ? phoenixGold : phoenixSilver} alt="Thumbnail 1" className="w-full h-full object-cover opacity-60 hover:opacity-100 transition-opacity" />
                 </div>
                 <div className="aspect-square rounded-xl overflow-hidden bg-[#1a1c1c] border border-white/5 cursor-pointer">
-                   <img src={selected === "gold" ? phoenixGold : phoenixSilver} alt="Thumbnail 1" className="w-full h-full object-cover opacity-60 hover:opacity-100 transition-opacity" />
+                   <img src={selected === "gold" ? phoenixGold : phoenixSilver} alt="Thumbnail 2" className="w-full h-full object-cover opacity-60 hover:opacity-100 transition-opacity" />
                 </div>
                 <div className="aspect-square rounded-xl overflow-hidden bg-[#1a1c1c] border border-white/5 cursor-pointer">
-                   <img src={selected === "gold" ? phoenixGold : phoenixSilver} alt="Thumbnail 1" className="w-full h-full object-cover opacity-60 hover:opacity-100 transition-opacity" />
+                   <img src={selected === "gold" ? phoenixGold : phoenixSilver} alt="Thumbnail 3" className="w-full h-full object-cover opacity-60 hover:opacity-100 transition-opacity" />
                 </div>
               </div>
             </ScrollReveal>
@@ -249,14 +273,14 @@ const ProductShowcase = ({
                   <button 
                     onClick={handleBuyNow}
                     disabled={isProcessing}
-                    className="flex-1 bg-[#c5a059] text-black py-4 text-xs tracking-[0.2em] uppercase font-bold hover:bg-[#d4af37] transition-all rounded-sm shadow-[0_0_15px_rgba(197,160,89,0.2)]"
+                    className="flex-1 bg-[#c5a059] text-black py-4 text-xs tracking-[0.2em] uppercase font-bold hover:bg-[#d4af37] transition-all rounded-sm shadow-[0_0_15px_rgba(197,160,89,0.2)] disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    Buy Now
+                    {isProcessing ? 'Processing...' : 'Buy Now'}
                   </button>
                   <button 
                     onClick={handleAddToCart}
                     disabled={isProcessing}
-                    className="flex-1 border border-[#c5a059] text-[#c5a059] py-4 text-xs tracking-[0.2em] uppercase font-bold hover:bg-[#c5a059]/10 transition-all rounded-sm"
+                    className="flex-1 border border-[#c5a059] text-[#c5a059] py-4 text-xs tracking-[0.2em] uppercase font-bold hover:bg-[#c5a059]/10 transition-all rounded-sm disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     Add to Cart
                   </button>
