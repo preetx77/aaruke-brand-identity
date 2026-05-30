@@ -63,12 +63,9 @@ const NavBar = ({ onOpenCart, onOpenAuth, onOpenContact, onNavigate }) => {
             
             {/* Desktop Links */}
             <div className="hidden md:flex items-center gap-6">
-              <button 
-                onClick={() => onNavigate("home")}
-                className="font-sans text-xs tracking-widest uppercase text-[#c5a059] hover:text-white transition-colors"
-              >
-                Shop Phoenix
-              </button>
+              <a href="#product" className="text-xs tracking-[0.2em] uppercase text-white/80 hover:text-[#c5a059] transition-colors">
+              Shop Phoenix
+              </a>
             </div>
 
             {/* Authentication Button */}
