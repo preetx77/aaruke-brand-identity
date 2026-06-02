@@ -15,6 +15,14 @@ const ProductShowcase = ({
   isCartOpen: boolean;
   setIsCartOpen: (val: boolean) => void;
 }) => {
+
+  // 🔴 DIAGNOSTIC CHECK: This will prove if your .env variables are actually loading
+  console.log("=== NETWORK DIAGNOSTICS ===");
+  console.log("1. Store Domain:", import.meta.env.VITE_SHOPIFY_STORE_DOMAIN);
+  console.log("2. Public Token:", import.meta.env.VITE_SHOPIFY_STOREFRONT_ACCESS_TOKEN);
+  console.log("3. Shopify Client Config:", shopifyClient.config);
+  console.log("===========================");
+
   const [selected, setSelected] = useState<"gold" | "silver">("gold");
   const [cartItems, setCartItems] = useState<CartItemType[]>(() => {
     const saved = localStorage.getItem("aaruke_cart");
@@ -22,7 +30,8 @@ const ProductShowcase = ({
   });
 
   const [isProcessing, setIsProcessing] = useState(false);
-  const [liveProduct, setLiveProduct] = useState<any>(null);
+  
+  const [liveProduct, setLiveProduct] = useState<any>({ title: "Aaruké Test Product" });
   const [isLoadingData, setIsLoadingData] = useState(true);
 
   useEffect(() => {
@@ -32,8 +41,8 @@ const ProductShowcase = ({
   useEffect(() => {
     const fetchShopifyData = async () => {
       try {
-        const product = await shopifyClient.product.fetchByHandle('phoenix-necklace');
-        setLiveProduct(product);
+        const product = await shopifyClient.product.fetchByHandle('test-product');
+        if (product) setLiveProduct(product);
       } catch (error) {
         console.error("Failed to fetch live product data:", error);
       } finally {
@@ -45,10 +54,12 @@ const ProductShowcase = ({
 
   const getSelectedVariant = () => {
     if (!liveProduct || !liveProduct.variants) return null;
+    
     const searchString = selected === "gold" ? "gold-plated" : "silver-plated";
+    
     return liveProduct.variants.find((v: any) => v.title.toLowerCase() === searchString) 
            || liveProduct.variants.find((v: any) => v.title.toLowerCase().includes(selected)) 
-           || liveProduct.variants[selected === "gold" ? 0 : 1]; 
+           || liveProduct.variants[selected === "gold" ? 0 : 1];
   };
 
   const handleAddToCart = () => {
@@ -60,11 +71,11 @@ const ProductShowcase = ({
     } 
     
     try {
-      const rawPrice = matchedVariant.price?.amount || matchedVariant.priceV2?.amount || matchedVariant.price || "6999";
+      const rawPrice = matchedVariant.price?.amount || matchedVariant.priceV2?.amount || matchedVariant.price || "10.00";
 
       const newItem: CartItemType = {
         id: matchedVariant.id, 
-        title: liveProduct?.title || "Phoenix Necklace",
+        title: liveProduct?.title || "Aaruké Test Product",
         variantTitle: matchedVariant.title,
         price: rawPrice,
         image: selected === "gold" ? phoenixGold : phoenixSilver, 
@@ -137,38 +148,32 @@ const ProductShowcase = ({
   };
 
   const currentVariant = getSelectedVariant();
-  const displayPrice = currentVariant?.price?.amount || currentVariant?.priceV2?.amount || currentVariant?.price || "6999";
+  const displayPrice = currentVariant?.price?.amount || currentVariant?.priceV2?.amount || currentVariant?.price || "10.00";
 
   return (
     <section id="product" className="py-24 md:py-36 px-6 bg-[#0a0c0c] text-ivory min-h-screen flex items-center">
       <div className="max-w-[1200px] mx-auto w-full">
         <div className="grid md:grid-cols-2 gap-12 md:gap-24 items-start">
           
-          {/* --- MOBILE TITLE BLOCK (Hidden on Desktop) --- */}
           <div className="md:hidden flex flex-col pt-4">
             <ScrollReveal>
               <span className="text-[9px] tracking-[0.2em] uppercase text-muted-foreground mb-4 block font-sans">
                 First Release · Limited Pieces
               </span>
-              
               <h2 className="font-serif text-4xl font-light mb-2 text-white">The Phoenix Necklace</h2>
-              
               <p className="font-serif text-muted-foreground italic text-base mb-6">Rise · Transform · Become</p>
-
               <p className="font-serif text-sm text-ivory/80 italic mb-2">
                 A personal symbol designed to stay with you through phases of transformation.
               </p>
             </ScrollReveal>
           </div>
 
-          {/* LEFT COLUMN - IMAGES */}
           <div className="space-y-6">
             <ScrollReveal direction="left">
               <div className="relative rounded-2xl overflow-hidden bg-[#111313] aspect-[4/5]">
                 <div className="absolute top-6 right-0 bg-[#c5a059] text-black text-[9px] font-bold tracking-widest uppercase py-2 px-4 z-20 rounded-l-sm">
                   Founder Edition
                 </div>
-                
                 <img
                   src={selected === "gold" ? phoenixGold : phoenixSilver}
                   alt={`Phoenix Necklace in ${selected}`}
@@ -190,29 +195,22 @@ const ProductShowcase = ({
             </ScrollReveal>
           </div>
 
-          {/* RIGHT COLUMN - DETAILS */}
           <ScrollReveal direction="right" delay={0.2}>
             <div className="flex flex-col h-full pt-4 md:pt-10">
               
-              {/* --- DESKTOP TITLE BLOCK (Hidden on Mobile) --- */}
               <div className="hidden md:block">
                 <span className="text-[9px] tracking-[0.2em] uppercase text-muted-foreground mb-4 block font-sans">
                   First Release · Limited Pieces
                 </span>
-                
                 <h2 className="font-serif text-4xl md:text-5xl font-light mb-2 text-white">The Phoenix Necklace</h2>
-                
                 <p className="font-serif text-muted-foreground italic text-base mb-8">Rise · Transform · Become</p>
-
                 <p className="font-serif text-sm md:text-base text-ivory/80 italic mb-8">
                   A personal symbol designed to stay with you through phases of transformation.
                 </p>
               </div>
 
-              {/* Adjust margin to account for mobile vs desktop spacing */}
               <hr className="border-white/5 mb-8 mt-4 md:mt-0" />
 
-              {/* Variant Selector */}
               <div className="mb-8">
                 <span className="text-[9px] tracking-[0.2em] uppercase text-muted-foreground mb-4 block font-sans">
                   Select Variant
@@ -235,7 +233,6 @@ const ProductShowcase = ({
                 </div>
               </div>
 
-              {/* 2x2 Feature Grid */}
               <div className="grid grid-cols-2 gap-3 mb-10">
                 <div className="border border-white/5 bg-white/[0.02] p-4 flex gap-3 items-center rounded-sm">
                   <svg className="w-4 h-4 text-muted-foreground shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
@@ -270,14 +267,12 @@ const ProductShowcase = ({
                 </div>
               </div>
 
-              {/* Price */}
               <div className="mb-8">
                 <span className="font-serif text-4xl text-white font-light tracking-tight">
                   ₹{Math.floor(Number(displayPrice)).toLocaleString('en-IN')}
                 </span>
               </div>
 
-              {/* Action Buttons */}
               <div className="space-y-4 mb-6">
                 <div className="flex gap-4">
                   <button 
@@ -301,7 +296,6 @@ const ProductShowcase = ({
                 </button>
               </div>
 
-              {/* Footer Row */}
               <div className="flex justify-between items-center text-[8px] tracking-widest uppercase text-muted-foreground/60 border-t border-white/5 pt-6 mt-4">
                 <span>Carefully packed</span>
                 <span>Secure Checkout</span>
