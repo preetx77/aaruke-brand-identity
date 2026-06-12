@@ -1,97 +1,101 @@
 import { ScrollReveal } from "../ScrollReveal";
-import BorderGlow from '../BorderGlow';
+
+const philosophyLines = [
+  {
+    label: "The symbol",
+    text: "The Phoenix represents transformation.",
+  },
+  {
+    label: "The person",
+    text: "For those who have rebuilt themselves, outgrown old versions, and stepped into something stronger.",
+  },
+  {
+    label: "The intention",
+    text: "This piece was created as a reminder — of growth, resilience, and everything you've risen from.",
+  },
+];
 
 const BrandStory = () => (
   <section className="py-16 md:py-32 px-4 md:px-6">
-    <div className="max-w-3xl mx-auto text-center">
-      <ScrollReveal>
-        <p className="tracking-luxury uppercase text-[10px] md:text-xs font-sans text-gold mb-4 md:mb-6">
-          The Aaruke Philosophy
-        </p>
-      </ScrollReveal>
-      <ScrollReveal delay={0.1}>
-        <h2 className="font-serif text-3xl md:text-5xl font-light mb-8 leading-[1.2] md:leading-[1.1] text-ivory">
-          More Than Jewellery. A Symbolic Becoming.
-        </h2>
-      </ScrollReveal>
-    </div>
+    <div className="max-w-2xl mx-auto">
 
-    <ScrollReveal delay={0.2}>
-      {/* Changed to grid-cols-1 on mobile, grid-cols-3 on desktop. Adjusted gap dynamically. */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 mt-8 md:mt-12">
-        
-        {/* Card 1: The Phoenix */}
-        <BorderGlow
-          edgeSensitivity={30}
-          glowColor="40 80 80"
-          backgroundColor="#182A22"
-          borderRadius={23}
-          glowRadius={42}
-          glowIntensity={3}
-          coneSpread={29}
-          animated={false}
-          colors={['#ffffff', '#cbd5e1', '#ffffff', '#94a3b8']}
-        >
-          <div className="w-full h-full flex items-center justify-center text-center p-6 font-sans text-base md:text-lg text-muted-foreground leading-relaxed font-light min-h-[120px] md:min-h-[150px] bg-[#182A22] rounded-[22px]">
-            The Phoenix represents transformation.
-          </div>
-        </BorderGlow>
-
-        {/* Card 2: For those who have rebuilt */}
-        <BorderGlow
-          edgeSensitivity={30}
-          glowColor="40 80 80"
-          backgroundColor="#182A22"
-          borderRadius={23}
-          glowRadius={42}
-          glowIntensity={3}
-          coneSpread={29}
-          animated={false}
-          colors={['#ffffff', '#cbd5e1', '#ffffff', '#94a3b8']}
-        >
-          <div className="w-full h-full flex items-center justify-center text-center p-6 font-sans text-base md:text-lg text-muted-foreground leading-relaxed font-light min-h-[120px] md:min-h-[150px] bg-[#182A22] rounded-[22px]">
-            For those who have rebuilt themselves, outgrown old versions, and stepped into something stronger.
-          </div>
-        </BorderGlow>
-
-        {/* Card 3: This piece was created */}
-        <BorderGlow
-          edgeSensitivity={30}
-          glowColor="40 80 80"
-          backgroundColor="#182A22"
-          borderRadius={23}
-          glowRadius={42}
-          glowIntensity={3}
-          coneSpread={29}
-          animated={false}
-          colors={['#ffffff', '#cbd5e1', '#ffffff', '#94a3b8']}
-        >
-          <div className="w-full h-full flex items-center justify-center text-center p-6 font-sans text-base md:text-lg text-muted-foreground leading-relaxed font-light min-h-[120px] md:min-h-[150px] bg-[#182A22] rounded-[22px]">
-            This piece was created as a reminder — of growth, resilience, and everything you’ve risen from.
-          </div>
-        </BorderGlow>
-
-        {/* Row 2: Full Width Quote (Changed to col-span-1 on mobile, col-span-3 on desktop) */}
-        <div className="col-span-1 md:col-span-3">
-          <BorderGlow
-            edgeSensitivity={30}
-            glowColor="40 80 80"
-            backgroundColor="#182A22"
-            borderRadius={23}
-            glowRadius={42}
-            glowIntensity={3}
-            coneSpread={29}
-            animated={false}
-            colors={['#ffffff', '#cbd5e1', '#ffffff', '#94a3b8']}
-          >
-            <div className="w-full flex items-center justify-center text-center p-6 md:p-8 font-serif text-lg md:text-xl min-h-[90px] md:min-h-[100px] bg-[#182A22] rounded-[22px]">
-              “What tried to break you, rebuilt you”
-            </div>
-          </BorderGlow>
-        </div>
-        
+      {/* Eyebrow + Headline */}
+      <div className="mb-5 md:mb-14">
+        <ScrollReveal>
+          <p className="tracking-luxury uppercase text-[10px] md:text-xs font-sans text-gold mb-4 md:mb-6">
+            The Aaruke Philosophy
+          </p>
+        </ScrollReveal>
+        <ScrollReveal delay={0.1}>
+          <h2 className="font-serif text-3xl md:text-5xl font-light leading-[1.15] text-ivory">
+            More Than Jewellery.<br />A Symbolic Becoming.
+          </h2>
+        </ScrollReveal>
       </div>
-    </ScrollReveal>
+
+
+      {/* Philosophy narrative rail */}
+      <ScrollReveal delay={0.2}>
+        <div
+          className="mb-10 md:mb-12 flex flex-col"
+          style={{ borderLeft: "1px solid rgba(201, 169, 110, 0.3)", paddingLeft: "24px" }}
+        >
+          {philosophyLines.map((line, i) => (
+            <div
+              key={i}
+              className="relative py-5"
+              style={{
+                borderBottom:
+                  i < philosophyLines.length - 1
+                    ? "1px solid rgba(255,255,255,0.06)"
+                    : "none",
+              }}
+            >
+              {/* Gold dot on the rail */}
+              <span
+                className="absolute bg-gold rounded-full opacity-60"
+                style={{ left: "-28px", top: "26px", width: "6px", height: "6px" }}
+              />
+
+              {/* Label */}
+              <p
+                className="font-sans uppercase text-gold mb-2"
+                style={{ fontSize: "10px", letterSpacing: "0.18em", opacity: 0.7 }}
+              >
+                {line.label}
+              </p>
+
+              {/* Text */}
+              <p className="font-serif text-xl md:text-2xl font-light italic leading-relaxed text-muted-foreground">
+                {line.text}
+              </p>
+            </div>
+          ))}
+        </div>
+      </ScrollReveal>
+
+      {/* Quote block */}
+      <ScrollReveal delay={0.3}>
+        <div
+          className="rounded-[14px] px-8 py-7 text-center"
+          style={{
+            background: "rgba(201, 169, 110, 0.07)",
+            border: "1px solid rgba(201, 169, 110, 0.18)",
+          }}
+        >
+          <span
+            className="block font-serif font-light italic text-gold opacity-40"
+            style={{ fontSize: "48px", lineHeight: "0.5", marginBottom: "12px" }}
+          >
+            "
+          </span>
+          <p className="font-serif text-xl md:text-2xl font-light italic text-ivory leading-snug tracking-wide">
+            What tried to break you, rebuilt you
+          </p>
+        </div>
+      </ScrollReveal>
+
+    </div>
   </section>
 );
 
