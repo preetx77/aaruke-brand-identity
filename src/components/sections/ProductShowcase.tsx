@@ -221,14 +221,14 @@ const ProductShowcase = ({
                     className={`py-4 px-4 flex items-center justify-center gap-3 text-xs tracking-widest uppercase border transition-all rounded-sm ${selected === "gold" ? "border-[#c5a059] text-[#c5a059] bg-[#c5a059]/5" : "border-white/10 text-muted-foreground hover:border-white/30"}`}
                   >
                     <span className="w-3 h-3 rounded-full bg-[#c5a059]"></span>
-                    Gold Phoenix
+                    Sunlit
                   </button>
                   <button 
                     onClick={() => setSelected("silver")} 
                     className={`py-4 px-4 flex items-center justify-center gap-3 text-xs tracking-widest uppercase border transition-all rounded-sm ${selected === "silver" ? "border-[#c5a059] text-[#c5a059] bg-[#c5a059]/5" : "border-white/10 text-muted-foreground hover:border-white/30"}`}
                   >
                     <span className="w-3 h-3 rounded-full bg-[#e2e8f0]"></span>
-                    Silver Phoenix
+                    Mooncast
                   </button>
                 </div>
               </div>
