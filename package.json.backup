@@ -1,0 +1,8 @@
+{
+  "dependencies": {
+    "ai": "^6.0.205",
+    "langchain": "^1.4.5",
+    "openai": "^6.42.0",
+    "react-markdown": "^10.1.0"
+  }
+}

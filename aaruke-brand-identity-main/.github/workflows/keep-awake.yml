@@ -1,0 +1,21 @@
+name: Keep Render Site Awake
+
+# This section tells GitHub WHEN to run the action
+on:
+  schedule:
+    # This cron schedule means: "Run every 5 minutes"
+    - cron: '*/5 * * * *'
+  
+  # This allows you to manually click a "Run" button in GitHub to test it
+  workflow_dispatch:
+
+# This section tells GitHub WHAT to do
+jobs:
+  ping-site:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Send a ping to the website
+        # We use $(date +%s) to generate a unique number every time.
+        # This forces Cloudflare to bypass the cache and hit the Render server directly, keeping it awake!
+        run: curl -s "https://www.aaruke.com/?ping=$(date +%s)" > /dev/null

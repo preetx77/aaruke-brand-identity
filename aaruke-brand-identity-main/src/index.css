@@ -1,0 +1,209 @@
+/* src/index.css */
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@300;400;500&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --green: #0e1f15;
+    --green-mid: #162a1c;
+    --green-light: #1f3d27;
+    --ivory: #f2ead8;
+    --ivory-dim: #c8bc9e;
+    --charcoal: #0b0f0c;
+    --gold: #c9a74a;
+    --gold-dim: #8a6e30;
+    --silver: #b8b8b8;
+    --ember: #e05c1a;
+    --serif: 'Cormorant Garamond', Georgia, serif;
+    --sans: 'Jost', sans-serif;
+
+
+    /* Deep Forest Green world */
+    --background: 150 25% 8%;
+    --foreground: 42 40% 90%;
+
+    --card: 150 20% 11%;
+    --card-foreground: 42 40% 90%;
+
+    --popover: 150 20% 11%;
+    --popover-foreground: 42 40% 90%;
+
+    --primary: 42 40% 90%;
+    --primary-foreground: 150 25% 8%;
+
+    --secondary: 150 15% 16%;
+    --secondary-foreground: 42 40% 85%;
+
+    --muted: 150 12% 18%;
+    --muted-foreground: 42 15% 55%;
+
+    --accent: 43 55% 58%;
+    --accent-foreground: 150 25% 8%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 150 12% 20%;
+    --input: 150 12% 20%;
+    --ring: 43 55% 58%;
+
+    --radius: 0.25rem;
+
+    /* Custom tokens */
+    --gold: 43 72% 55%;
+    --silver: 210 10% 72%;
+    --ivory: 42 40% 90%;
+    --forest-deep: 150 30% 5%;
+    --forest: 150 25% 8%;
+    --charcoal: 150 8% 12%;
+    --ember: 18 80% 50%;
+
+    --font-serif: 'Cormorant Garamond', Georgia, serif;
+    --font-sans: 'Outfit', system-ui, sans-serif;
+
+    --sidebar-background: 150 25% 8%;
+    --sidebar-foreground: 42 40% 90%;
+    --sidebar-primary: 43 55% 58%;
+    --sidebar-primary-foreground: 150 25% 8%;
+    --sidebar-accent: 150 15% 16%;
+    --sidebar-accent-foreground: 42 40% 90%;
+    --sidebar-border: 150 12% 20%;
+    --sidebar-ring: 43 55% 58%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    overflow-x: hidden;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-serif);
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+    overflow-wrap: break-word;
+  }
+}
+
+@layer utilities {
+  .font-serif {
+    font-family: var(--font-serif);
+  }
+
+  .font-sans {
+    font-family: var(--font-sans);
+  }
+
+  .text-gold {
+    color: hsl(var(--gold));
+  }
+
+  .text-silver {
+    color: hsl(var(--silver));
+  }
+
+  .text-ivory {
+    color: hsl(var(--ivory));
+  }
+
+  .bg-forest-deep {
+    background-color: hsl(var(--forest-deep));
+  }
+
+  .bg-forest {
+    background-color: hsl(var(--forest));
+  }
+
+  .bg-charcoal {
+    background-color: hsl(var(--charcoal));
+  }
+
+  .border-gold {
+    border-color: hsl(var(--gold) / 0.3);
+  }
+
+  .glow-gold {
+    box-shadow: 0 0 40px hsl(var(--gold) / 0.08), 0 0 80px hsl(var(--gold) / 0.04);
+  }
+
+  .glow-ember {
+    box-shadow: 0 0 60px hsl(var(--ember) / 0.15), 0 0 120px hsl(var(--ember) / 0.05);
+  }
+
+  .tracking-luxury {
+    letter-spacing: 0.2em;
+  }
+
+  .tracking-wide-luxury {
+    letter-spacing: 0.35em;
+  }
+}
+
+/* Ember particle animation */
+@keyframes ember-float {
+  0% { transform: translateY(0) translateX(0) scale(1); opacity: 0; }
+  20% { opacity: 0.8; }
+  80% { opacity: 0.3; }
+  100% { transform: translateY(-120px) translateX(30px) scale(0); opacity: 0; }
+}
+
+@keyframes ember-glow {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.7; }
+}
+
+@keyframes slow-pulse {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 0.8; }
+}
+
+.ember-particle {
+  animation: ember-float 4s ease-out infinite;
+}
+
+.ember-glow {
+  animation: ember-glow 3s ease-in-out infinite;
+}
+
+.slow-pulse {
+  animation: slow-pulse 4s ease-in-out infinite;
+}
+
+.meaning{
+  padding-left: none;
+  padding-right: none;
+}
+
+
+.why-item { transition: background 0.3s; }
+.why-item:hover { background: #0d1610; }
+@media (max-width: 768px) {
+    nav { padding: 1.2rem 1.5rem; }
+    .meaning-inner  { grid-template-columns: 1fr !important; gap: 3rem !important; }
+    .product-inner  { grid-template-columns: 1fr !important; gap: 3rem !important; }
+    .footer-inner   { grid-template-columns: 1fr !important; gap: 2.5rem !important; }
+    .footer-bottom  { flex-direction: column !important; text-align: center !important; }
+    .email-form     { flex-direction: column !important; }
+    .email-input    { border-right: 1px solid rgba(201,168,76,0.25) !important; border-bottom: none !important; }
+    .spirit-cards-grid { grid-template-columns: 1fr 1fr !important; }
+  }
+
+ @media (max-width: 480px) {
+    .spirit-cards-grid { grid-template-columns: 1fr !important; }
+    .why-grid-inner    { grid-template-columns: 1fr 1fr !important; }
+  }
