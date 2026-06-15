@@ -8,6 +8,45 @@ interface Message {
   timestamp: Date;
 }
 
+const RESPONSES: { [key: string]: string } = {
+  price: "Our Phoenix Necklace is priced at ₹3,499 for the limited founder edition. This exquisite piece is available in both gold and silver finishes. 💎",
+  cost: "Our Phoenix Necklace is priced at ₹3,499 for the limited founder edition. This exquisite piece is available in both gold and silver finishes. 💎",
+  shipping: "We offer fast shipping across India! Your order will be carefully packaged and delivered with tracking. We aim for delivery within 5-7 business days. ✨",
+  delivery: "We offer fast shipping across India! Your order will be carefully packaged and delivered with tracking. We aim for delivery within 5-7 business days. ✨",
+  ship: "We offer fast shipping across India! Your order will be carefully packaged and delivered with tracking. We aim for delivery within 5-7 business days. ✨",
+  track: "To track your order, check your email for the tracking link sent after shipment. You can also contact us at support@aaruke.com with your order number. 📦",
+  order: "To track your order, check your email for the tracking link sent after shipment. You can also contact us at support@aaruke.com with your order number. 📦",
+  care: "Your Aarukè jewelry deserves care! Always store in our luxury pouch, avoid harsh chemicals, and clean gently with a soft cloth. Detailed care instructions come with your purchase. 🎀",
+  clean: "Your Aarukè jewelry deserves care! Always store in our luxury pouch, avoid harsh chemicals, and clean gently with a soft cloth. Detailed care instructions come with your purchase. 🎀",
+  return: "We offer a 30-day satisfaction guarantee. If you're not completely delighted, we'll work with you. Contact our support team for hassle-free returns! 💎",
+  exchange: "We offer a 30-day satisfaction guarantee. If you're not completely delighted, we'll work with you. Contact our support team for hassle-free returns! 💎",
+  phoenix: "The Phoenix Necklace is our flagship piece, representing rebirth and transformation. Handcrafted with premium materials, it's a statement of luxury and spirituality. ✨",
+  collection: "The Phoenix Necklace is our flagship piece, representing rebirth and transformation. Handcrafted with premium materials, it's a statement of luxury and spirituality. ✨",
+  hello: "Welcome to Aarukè! I'm here to help with any questions about our luxury jewelry. What would you like to know? 🎀",
+  hi: "Welcome to Aarukè! I'm here to help with any questions about our luxury jewelry. What would you like to know? 🎀",
+  hey: "Welcome to Aarukè! I'm here to help with any questions about our luxury jewelry. What would you like to know? 🎀",
+  material: "Our Phoenix Necklace is handcrafted from premium gold and silver. Each piece is meticulously designed to ensure luxury and durability. ✨",
+  gold: "Our Phoenix Necklace is available in premium gold. Each piece is handcrafted with attention to detail. ₹3,499 💎",
+  silver: "Our Phoenix Necklace is available in premium silver. Each piece is handcrafted with attention to detail. ₹3,499 ✨",
+  hand: "Yes! Our Phoenix Necklace is entirely handcrafted by skilled artisans. Each piece is unique and made with premium materials. 🎀",
+  made: "Our jewelry is proudly made in India. We combine traditional craftsmanship with luxury design. 🇮🇳✨",
+  gift: "A Phoenix Necklace makes the perfect luxury gift! It symbolizes rebirth and transformation. Comes beautifully packaged. 🎁💎",
+};
+
+function getResponse(userMessage: string): string {
+  const lowerMessage = userMessage.toLowerCase();
+  
+  // Check for keyword matches
+  for (const [keyword, response] of Object.entries(RESPONSES)) {
+    if (lowerMessage.includes(keyword)) {
+      return response;
+    }
+  }
+  
+  // Default response
+  return "That's a wonderful question! I'd love to help. Could you share more details so I can better assist you? Feel free to ask about our products, shipping, care, or anything else! ✨";
+}
+
 export function AarukeAIChatbot() {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
@@ -30,7 +69,7 @@ export function AarukeAIChatbot() {
     scrollToBottom();
   }, [messages]);
 
-  const sendMessage = async () => {
+  const sendMessage = () => {
     if (!input.trim() || loading) return;
 
     const userMessage: Message = {
@@ -41,42 +80,22 @@ export function AarukeAIChatbot() {
     };
 
     setMessages((prev) => [...prev, userMessage]);
+    const userInput = input;
     setInput('');
     setLoading(true);
 
-    try {
-      const response = await fetch('/api/chat', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          messages: messages.map((m) => ({ role: m.role, content: m.content })),
-          userMessage: input,
-        }),
-      });
-
-      const data = await response.json();
-
-      if (data.reply) {
-        const assistantMessage: Message = {
-          id: (Date.now() + 1).toString(),
-          role: 'assistant',
-          content: data.reply,
-          timestamp: new Date(),
-        };
-        setMessages((prev) => [...prev, assistantMessage]);
-      }
-    } catch (error) {
-      console.error('Chat error:', error);
-      const errorMessage: Message = {
-        id: (Date.now() + 2).toString(),
+    // Simulate thinking delay
+    setTimeout(() => {
+      const reply = getResponse(userInput);
+      const assistantMessage: Message = {
+        id: (Date.now() + 1).toString(),
         role: 'assistant',
-        content: '❌ Oops! Something went wrong. Please try again.',
+        content: reply,
         timestamp: new Date(),
       };
-      setMessages((prev) => [...prev, errorMessage]);
-    } finally {
+      setMessages((prev) => [...prev, assistantMessage]);
       setLoading(false);
-    }
+    }, 800);
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
