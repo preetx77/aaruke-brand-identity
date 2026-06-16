@@ -8,6 +8,14 @@ interface Message {
   timestamp: Date;
 }
 
+interface CartItem {
+  id: string;
+  title: string;
+  variant: string;
+  price: string;
+  quantity: number;
+}
+
 const RESPONSES: { [key: string]: string } = {
   price: "Our Phoenix Necklace is priced at ₹3,499 for the limited founder edition. This exquisite piece is available in both gold and silver finishes. 💎",
   cost: "Our Phoenix Necklace is priced at ₹3,499 for the limited founder edition. This exquisite piece is available in both gold and silver finishes. 💎",
@@ -33,8 +41,33 @@ const RESPONSES: { [key: string]: string } = {
   gift: "A Phoenix Necklace makes the perfect luxury gift! It symbolizes rebirth and transformation. Comes beautifully packaged. 🎁💎",
 };
 
+function getCartItems(): CartItem[] {
+  try {
+    const saved = localStorage.getItem("aaruke_cart");
+    return saved ? JSON.parse(saved) : [];
+  } catch {
+    return [];
+  }
+}
+
 function getResponse(userMessage: string): string {
   const lowerMessage = userMessage.toLowerCase();
+  
+  // Check for cart-related queries
+  if (lowerMessage.includes('cart') || lowerMessage.includes('basket') || lowerMessage.includes('bag')) {
+    const cartItems = getCartItems();
+    if (cartItems.length === 0) {
+      return "Your cart is currently empty! 🛍️ Browse our Phoenix collection and add items to your cart. Need help choosing? I'm here to assist! ✨";
+    } else {
+      const total = cartItems.reduce((sum, item) => sum + (Number(item.price) * item.quantity), 0);
+      let response = `You have ${cartItems.length} item${cartItems.length > 1 ? 's' : ''} in your cart:\n\n`;
+      cartItems.forEach(item => {
+        response += `• ${item.title} (${item.variant}) - ₹${Number(item.price).toLocaleString('en-IN')} x ${item.quantity}\n`;
+      });
+      response += `\n💰 Total: ₹${total.toLocaleString('en-IN')}\n\nReady to checkout? Click the cart icon to proceed! 🎀`;
+      return response;
+    }
+  }
   
   // Check for keyword matches
   for (const [keyword, response] of Object.entries(RESPONSES)) {
@@ -59,7 +92,15 @@ export function AarukeAIChatbot() {
   ]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
+  const [showQuickReplies, setShowQuickReplies] = useState(true);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  const quickReplies = [
+    "What's in my cart?",
+    "Help with shipping",
+    "Track my order",
+    "Care instructions"
+  ];
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -69,24 +110,31 @@ export function AarukeAIChatbot() {
     scrollToBottom();
   }, [messages]);
 
-  const sendMessage = () => {
-    if (!input.trim() || loading) return;
+  const sendQuickReply = (reply: string) => {
+    setShowQuickReplies(false);
+    setInput(reply);
+    setTimeout(() => {
+      sendMessageWithText(reply);
+    }, 100);
+  };
+
+  const sendMessageWithText = (textToSend: string) => {
+    if (!textToSend.trim() || loading) return;
 
     const userMessage: Message = {
       id: Date.now().toString(),
       role: 'user',
-      content: input,
+      content: textToSend,
       timestamp: new Date(),
     };
 
     setMessages((prev) => [...prev, userMessage]);
-    const userInput = input;
     setInput('');
     setLoading(true);
 
     // Simulate thinking delay
     setTimeout(() => {
-      const reply = getResponse(userInput);
+      const reply = getResponse(textToSend);
       const assistantMessage: Message = {
         id: (Date.now() + 1).toString(),
         role: 'assistant',
@@ -98,7 +146,11 @@ export function AarukeAIChatbot() {
     }, 800);
   };
 
-  const handleKeyPress = (e: React.KeyboardEvent) => {
+  const sendMessage = () => {
+    sendMessageWithText(input);
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
       sendMessage();
@@ -158,6 +210,19 @@ export function AarukeAIChatbot() {
                 </div>
               </div>
             )}
+            {showQuickReplies && messages.length === 1 && (
+              <div className="flex flex-wrap gap-2 mt-4">
+                {quickReplies.map((reply, idx) => (
+                  <button
+                    key={idx}
+                    onClick={() => sendQuickReply(reply)}
+                    className="px-3 py-2 bg-amber-100 text-amber-800 rounded-lg text-xs hover:bg-amber-200 transition-colors border border-amber-300"
+                  >
+                    {reply}
+                  </button>
+                ))}
+              </div>
+            )}
             <div ref={messagesEndRef} />
           </div>
 
@@ -167,9 +232,9 @@ export function AarukeAIChatbot() {
               type="text"
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              onKeyPress={handleKeyPress}
+              onKeyDown={handleKeyDown}
               placeholder="Ask me anything..."
-              className="flex-1 border border-amber-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-600 bg-amber-50"
+              className="flex-1 border border-amber-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-600 bg-amber-50 text-black placeholder:text-gray-400"
               disabled={loading}
             />
             <button
